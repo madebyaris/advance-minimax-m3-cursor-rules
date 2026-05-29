@@ -1,26 +1,99 @@
 <div align="center">
 
-# MiniMax M2.7 Cursor Rules
+# ⚡ MiniMax M2.7 Cursor Rules
 
-[![Stars](https://img.shields.io/github/stars/madebyaris/advance-minimax-m2-cursor-rules?style=flat-square)](https://github.com/madebyaris/advance-minimax-m2-cursor-rules/stargazers)
+#### A durable execution spine for repo-scale engineering, agent teams, deep skills, and dynamic tool use.
+
+[![Stars](https://img.shields.io/github/stars/madebyaris/advance-minimax-m2-cursor-rules?style=flat-square&color=8b5cf6)](https://github.com/madebyaris/advance-minimax-m2-cursor-rules/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![Cursor 3](https://img.shields.io/badge/Tested-Cursor%203-blue?style=flat-square)](https://cursor.com/blog/cursor-3)
-[![MiniMax M2.7](https://img.shields.io/badge/MiniMax-M2.7-purple?style=flat-square)](https://platform.minimax.io)
-[![Any Model](https://img.shields.io/badge/Compatible-Any%20Model-green?style=flat-square)](#model-compatibility)
+[![MiniMax M2.7](https://img.shields.io/badge/MiniMax-M2.7-8b5cf6?style=flat-square)](https://platform.minimax.io)
+[![Any Model](https://img.shields.io/badge/Compatible-Any%20Model-22c55e?style=flat-square)](#-model-compatibility)
 
-**MiniMax M2.7 rules for repo-scale engineering, agent teams, skills, and dynamic tool use**
+<br/>
+
+![Always-On Rules](https://img.shields.io/badge/Always--On-2_rules-0f172a?style=for-the-badge)
+![Requestable Rules](https://img.shields.io/badge/Requestable-16_rules-1e293b?style=for-the-badge)
+![Skills](https://img.shields.io/badge/Skills-5_packs-14b8a6?style=for-the-badge)
+
+<br/>
 
 *Built for **MiniMax M2.7**, aligned with the official release and API docs, and written to stay useful across model changes.*
 
-[Quick Start](#quick-start) | [Architecture](#rule-architecture) | [M27-runtime](#m27-runtime-modes) | [AGENTSmd](#agentsmd-for-other-ides-and-clis)
+<sub>
+
+[Quick Start](#-quick-start) · [Why This Repo](#-why-this-repo-exists) · [Architecture](#-rule-architecture) · [Runtime Modes](#-m27-runtime-modes) · [Solver Loop](#-the-solver-loop) · [AGENTS.md](#-agentsmd-for-other-ides-and-clis) · [References](#-references)
+
+</sub>
 
 </div>
 
 ---
 
-## Why This Repo Exists
+## ✨ At A Glance
 
-This repo is designed to make MiniMax M2.7 feel strong in the places the official release emphasizes most:
+| | What you get |
+|---|---|
+| 🧠 **Lean always-on core** | Two durable rules carry the execution spine — solver loop, scope control, code discipline, and a strict proof contract. No persona bloat. |
+| 🧩 **Progressive depth** | 16 requestable rules + 5 skill packs load only when the task needs them, so context stays clean. |
+| 🛠️ **Honest tool use** | The agent works the *current* runtime — no invented tools, no stale wrappers, no promises before the path is confirmed. |
+| ✅ **Evidence-backed closeouts** | Explicit status labels (`verified` / `unverified` / `blocked`) and minimum-proof rules per change type. |
+| 🌐 **Portable** | `docs/AGENTS.md` carries the same behavior to non-Cursor IDEs and CLIs. |
+| 🔁 **Model-resilient** | Tuned for M2.7 first, compatible with any Cursor-supported model. |
+
+> **The bet:** MiniMax doesn't get better from persona text. It gets better from cleaner context, smaller proving slices, better tool routing, and honest verification. Every rule here optimizes for that.
+
+---
+
+## 🚀 Quick Start
+
+### For Cursor
+
+```bash
+git clone https://github.com/madebyaris/advance-minimax-m2-cursor-rules.git
+cp -r advance-minimax-m2-cursor-rules/.cursor your-project/.cursor
+```
+
+That's it. Two rules are **always on**:
+
+- `.cursor/rules/minimax-m2-core.mdc` — execution behavior
+- `.cursor/rules/minimax-m2-status-verification.mdc` — status & proof contract
+
+Everything else is **requestable** and narrower by design — it loads when the task or file globs call for it.
+
+> The official docs recommend Anthropic-compatible access for MiniMax text models, and also support OpenAI-compatible access paths. See [MiniMax text generation docs](https://platform.minimax.io/docs/guides/text-generation) · [MiniMax API overview](https://platform.minimax.io/docs/api-reference/api-overview).
+
+### For Other IDEs and CLIs
+
+Copy `docs/AGENTS.md` into the target repo root as `AGENTS.md`. It lives under `docs/` here on purpose, so Cursor does not auto-activate it while you edit these rules.
+
+---
+
+## 🗂️ Repository Layout
+
+```text
+.cursor/
+├── rules/                         # 18 rules (2 always-on + 16 requestable)
+│   ├── minimax-m2-core.mdc                  ★ always-on · execution spine
+│   ├── minimax-m2-status-verification.mdc   ★ always-on · proof contract
+│   └── …                                    requestable: runtime + domain
+└── skills/                        # 5 deep, structured skill packs
+    ├── anti-slop-design/
+    ├── 3d-web-experiences/
+    ├── deep-research/
+    ├── incident-triage-harness/
+    └── minimax-multimodal-toolkit/
+docs/
+└── AGENTS.md                      # portable agent contract (non-Cursor)
+examples/
+└── agent-teams-product-prototype.md
+```
+
+---
+
+## 🎯 Why This Repo Exists
+
+This repo makes MiniMax M2.7 feel strong exactly where the official release puts its emphasis:
 
 - repo-scale and end-to-end engineering
 - agent harnesses and multi-agent collaboration
@@ -28,24 +101,16 @@ This repo is designed to make MiniMax M2.7 feel strong in the places the officia
 - dynamic tool discovery in changing environments
 - proportional verification with evidence-backed closeouts
 
-The goal is not to make MiniMax merely imitate another provider's tone. The goal is to give M2.7 a durable execution spine that complements its official positioning around real-world engineering, complex skills, and agent workflows.
+The goal is **not** to make MiniMax imitate another provider's tone. It is to give M2.7 a durable execution spine that complements its official positioning around real-world engineering, complex skills, and agent workflows.
 
-## Model Compatibility
+<details>
+<summary><b>Why M2.7-native (and what that optimizes for)</b></summary>
 
-The rules are designed to survive model changes:
+<br/>
 
-- the core rule stays short and durable
-- runtime-specific guidance lives in requestable rules
-- tool advice is written around whatever the current environment actually exposes
-- version-sensitive claims are meant to be verified at runtime, not frozen into the rules
+MiniMax positions M2.7 as strong at real-world software engineering, full project delivery, large skill adherence, and agent teams — rather than only one-shot code generation ([release report](https://www.minimax.io/news/minimax-m27-en) · [model page](https://www.minimax.io/models/text/m27)).
 
-This makes the repo useful for MiniMax first, while still compatible with other Cursor-supported models.
-
-## Why M2.7-Native
-
-MiniMax positions M2.7 as strong at real-world software engineering, full project delivery, large skill adherence, and agent teams rather than only one-shot code generation [MiniMax M2.7 release report](https://www.minimax.io/news/minimax-m27-en) [MiniMax M2.7 model page](https://www.minimax.io/models/text/m27).
-
-That means this repo optimizes for:
+So this repo optimizes for:
 
 - bounded repo exploration instead of reading everything
 - smallest proving slices for large tasks
@@ -53,76 +118,14 @@ That means this repo optimizes for:
 - strong skill contracts instead of vague long prompts
 - truthful runtime and verification reporting
 
-## What Changed
+</details>
 
-This refactor removes most of the old prompt bloat:
+<details>
+<summary><b>The MoE note — what you can and cannot control</b></summary>
 
-- no more Opus-style identity anchoring in the core
-- a separate always-on verification contract instead of burying proof rules in prose
-- far less duplicated tool and verification doctrine
-- no hardcoded month/year version examples in workflow rules
-- no fake `<think>` or `<thinking>` scaffolding
-- less "always run everything" language in domain-specific rules
-- `docs/AGENTS.md` is now a real standalone agent contract for non-Cursor environments
-- M2.7-specific docs now distinguish core execution rules from optional agent-team, skill, and tool-discovery depth
+<br/>
 
-## Execution Guarantees
-
-The repo now tries to enforce a few non-negotiable behaviors:
-
-- new packages, frameworks, and toolchains must be checked against current authoritative sources before they are recommended or installed
-- scaffolding should use the framework's official CLI or official `create` or `init` path when one exists
-- scaffold output must be inspected before continuing after generators or CLIs run
-- runnable work is not done until there is runnable proof, not just static confidence
-- if a required check fails or is skipped, the agent should report `blocked` or `implemented but unverified` instead of claiming completion
-- browser or user-surface verification is required for UI and interaction claims
-- tool-based promises should not be made until the current runtime path is confirmed
-
-## M2.7 Runtime Modes
-
-The official API docs expose both `MiniMax-M2.7` and `MiniMax-M2.7-highspeed`, each with a `204,800` token context window. The docs describe standard M2.7 at roughly `60 tps` and `M2.7-highspeed` at roughly `100 tps`, with the highspeed variant positioned as the same capability profile with lower latency [MiniMax text generation docs](https://platform.minimax.io/docs/guides/text-generation) [MiniMax API overview](https://platform.minimax.io/docs/api-reference/api-overview).
-
-Use that split like this:
-
-| Model | Best fit |
-|------|---------|
-| `MiniMax-M2.7` | Deep repo work, complex synthesis, richer multi-step tasks |
-| `MiniMax-M2.7-highspeed` | Faster interactive loops, shorter verification cycles, lower-latency coding assistance |
-
-## Solver Loop
-
-The main thing this repo now tries to transfer into MiniMax M2.7 is a repeatable solver loop:
-
-1. Define the outcome in operational terms.
-2. Inspect the repo and runtime before deciding.
-3. Find the spine: entry points, data flow, state boundaries, persistence, and user-visible behavior.
-4. Build the smallest vertical slice that proves the feature works.
-5. Verify at the surface where the user experiences the change.
-6. Expand scope only after the core slice is working.
-
-For app-building, this means:
-
-- do not start with a pile of components
-- resolve key flows and acceptance first
-- prove one end-to-end slice early
-- add polish and secondary features afterward
-
-The minimum proving loop for a new app should usually be:
-
-1. install or setup succeeds
-2. dev server or health check starts
-3. production build succeeds
-4. one primary happy-path flow works
-5. promised integrations such as styling, routing, persistence, or auth are actually verified
-
-Example:
-
-- For "build a task app", prioritize `create -> list -> complete -> persist -> reload`
-- Delay filters, collaboration, settings, and animations until the core path works
-
-## MoE Note
-
-These rules do **not** assume you can directly control a model's internal MoE routing through persona text.
+These rules do **not** assume you can steer a model's internal MoE routing through persona text.
 
 The controllable levers are:
 
@@ -132,187 +135,247 @@ The controllable levers are:
 - better verification loops
 - clearer definitions of done
 
-If MiniMax performs better after a prompt rewrite, the likely reason is improved external problem structure, not magical direct access to hidden experts.
+If MiniMax performs better after a prompt rewrite, the likely reason is improved external problem structure — not magic access to hidden experts.
 
-## Quick Start
+</details>
 
-### For Cursor
+---
 
-```bash
-git clone https://github.com/madebyaris/advance-minimax-m2-cursor-rules.git
-cp -r advance-minimax-m2-cursor-rules/.cursor your-project/.cursor
+## 🔁 The Solver Loop
+
+The single most important behavior this repo transfers into M2.7:
+
+```text
+1. Define the outcome in operational terms.
+2. Inspect the repo and runtime before deciding.
+3. Find the spine: entry points, data flow, state, persistence, user-visible behavior.
+4. Build the smallest vertical slice that proves the feature works.
+5. Verify at the surface where the user experiences the change.
+6. Expand scope only after the core slice works.
 ```
 
-The always-on rules are:
+**For app-building**, that means: don't start with a pile of components — resolve key flows first, prove one end-to-end slice early, then add polish.
 
-- `.cursor/rules/minimax-m2-core.mdc`
-- `.cursor/rules/minimax-m2-status-verification.mdc`
+| New-app proving loop | |
+|---|---|
+| 1 | install / setup succeeds |
+| 2 | dev server or health check starts |
+| 3 | production build succeeds |
+| 4 | one primary happy-path flow works |
+| 5 | promised integrations (styling, routing, persistence, auth) are actually verified |
 
-The rest of the rules are requestable and narrower by design.
+> **Example —** for "build a task app", prioritize `create → list → complete → persist → reload`. Delay filters, collaboration, settings, and animations until the core path works.
 
-The official docs recommend Anthropic-compatible access for MiniMax text models and also support OpenAI-compatible access paths [MiniMax text generation docs](https://platform.minimax.io/docs/guides/text-generation) [MiniMax API overview](https://platform.minimax.io/docs/api-reference/api-overview).
+---
 
-### For Other IDEs and CLIs
+## ✅ Execution Guarantees
 
-Copy `docs/AGENTS.md` into the target repo root as `AGENTS.md`, or use it as your agent instructions file in environments that support a portable agent contract.
-It intentionally lives under `docs/` in this repo so Cursor does not auto-activate it while you are editing these rules.
+A few behaviors the repo treats as non-negotiable:
 
-## Rule Architecture
+- New packages, frameworks, and toolchains are checked against current authoritative sources **before** they are recommended or installed.
+- Scaffolding uses the framework's official CLI / `create` / `init` path when one exists.
+- Scaffold output is inspected before continuing.
+- Runnable work is not "done" until there is **runnable proof**, not just static confidence.
+- If a required check fails or is skipped, the agent reports `blocked` or `implemented but unverified` — never a false completion.
+- Browser or user-surface verification is required for UI and interaction claims.
+- Tool-based promises wait until the runtime path is confirmed.
 
-### Always-On Core
+---
 
-| File | Purpose |
-|------|---------|
-| `.cursor/rules/minimax-m2-core.mdc` | Durable always-on execution behavior: solver loop, scope control, code discipline, truthful tool use, scaffold discipline, and concise progress |
-| `.cursor/rules/minimax-m2-status-verification.mdc` | Always-on status and proof contract: exact claim labels, proof matching, and evidence-first closeouts |
+## 🏗️ Rule Architecture
 
-### Runtime Rules
+The system is layered: a tiny always-on core, runtime rules that load on demand, and domain rules that attach via file globs. Depth lives in skills.
 
-| File | Purpose |
-|------|---------|
-| `.cursor/rules/model-compatibility.mdc` | Prompt hierarchy, tool discipline, and context control |
-| `.cursor/rules/cursor-tools-mastery.mdc` | Current tool-selection patterns inside Cursor |
-| `.cursor/rules/minimax-m2-verification.mdc` | Proportional verification guidance |
-| `.cursor/rules/minimax-mcp-tools.mdc` | Current-doc, web, and MCP/plugin lookup guidance |
-| `.cursor/rules/cursor-agent-orchestration.mdc` | Planning, subagents, and multi-step coordination |
-| `.cursor/rules/clarify-first-prompting.mdc` | Ask only on real forks after inspecting first |
-| `.cursor/rules/agent-teams.mdc` | Team-role boundaries, handoffs, escalation, and agent graph choices |
-| `.cursor/rules/skill-authoring.mdc` | When to use skills, how to structure them, and how to avoid skill bloat |
-| `.cursor/rules/tool-discovery.mdc` | Runtime tool inventory, MCP/schema discovery, capability mapping, and fallbacks |
-
-### Domain Rules
-
-Requestable rules for cross-cutting domains — not per-language cookbooks. Language-specific idioms come from reading the repo, official docs, and the always-on **Code Discipline** section in the core.
+### ★ Always-On Core
 
 | File | Purpose |
 |------|---------|
-| `.cursor/rules/language-agnostic-patterns.mdc` | SOLID, design patterns, change discipline, code review heuristics |
-| `.cursor/rules/design-systems.mdc` | Tokens, shadcn/ui, Tailwind v4 mechanics (aesthetics → `anti-slop-design` skill) |
-| `.cursor/rules/3d-graphics.mdc` | Three.js / R3F syntax, container sizing, import traps (quality → `3d-web-experiences` skill) |
-| `.cursor/rules/devops-infrastructure.mdc` | Docker, k8s, Terraform, CI/CD — validate-before-apply, infra traps (lean) |
-| `.cursor/rules/mobile-cross-platform.mdc` | Flutter / RN / Expo — CLI-first, architecture, mobile verify (lean) |
+| `minimax-m2-core.mdc` | Durable execution behavior: solver loop, scope control, **code discipline**, truthful tool use, scaffold discipline, concise progress |
+| `minimax-m2-status-verification.mdc` | Status & proof contract: exact claim labels, proof matching, evidence-first closeouts |
 
-### Skills
+### ⚙️ Runtime Rules
 
-The repo's `.cursor/skills/` directory is part of the intended M2.7 workflow, not a side feature. Skills let you keep deeper, domain-specific procedures out of the always-on core while still giving the model large, structured guidance when the task warrants it.
+| File | Purpose |
+|------|---------|
+| `model-compatibility.mdc` | Prompt hierarchy, tool discipline, context control across models |
+| `cursor-tools-mastery.mdc` | Current tool-selection patterns inside Cursor |
+| `cursor-mcp-optimization.mdc` | Browser, Figma, and Cloudflare tools with direct-action patterns |
+| `cursor-agent-orchestration.mdc` | Planning, subagents, and multi-step coordination |
+| `agent-teams.mdc` | Role boundaries, handoffs, escalation, serial vs parallel teams |
+| `tool-discovery.mdc` | Runtime tool inventory, MCP/schema discovery, safe fallbacks |
+| `minimax-mcp-tools.mdc` | Current-doc, web, and MCP/plugin lookup guidance |
+| `minimax-m2-verification.mdc` | Proportional verification playbook (shell + browser checks) |
+| `minimax-m2-self-evolution.mdc` | Iterative refinement loops and autonomous debugging |
+| `skill-authoring.mdc` | When to use skills, how to structure them, how to avoid bloat |
+| `clarify-first-prompting.mdc` | Ask only on real forks, after inspecting first |
 
-Use skills when:
+### 🧱 Domain Rules
 
-- the task has a repeatable workflow that is too detailed for the always-on core
-- the task needs examples, references, or category-specific heuristics
-- you want progressive disclosure through `SKILL.md` and optional companion files such as `reference.md`
+Requestable rules for cross-cutting domains — **not** per-language cookbooks. Language-specific idioms come from reading the repo, official docs, and the always-on **Code Discipline** section.
 
-Current local skills:
+| File | Purpose |
+|------|---------|
+| `language-agnostic-patterns.mdc` | SOLID, design patterns, change discipline, code-review heuristics |
+| `design-systems.mdc` | Tokens, shadcn/ui, Tailwind v4 mechanics → aesthetics via `anti-slop-design` |
+| `3d-graphics.mdc` | Three.js / R3F syntax, container sizing, import traps → quality via `3d-web-experiences` |
+| `devops-infrastructure.mdc` | Docker, k8s, Terraform, CI/CD — validate-before-apply, infra traps (lean) |
+| `mobile-cross-platform.mdc` | Flutter / RN / Expo — CLI-first, architecture, mobile verify (lean) |
+
+### 🧩 Skills
+
+Skills keep deep, domain-specific procedures out of the always-on core, then deliver large structured guidance through progressive disclosure (`SKILL.md` + optional `reference.md`).
 
 | Skill | Purpose |
 |------|---------|
-| `.cursor/skills/anti-slop-design/` | Category-aware design direction, anti-slop checks, and UI polish |
-| `.cursor/skills/3d-web-experiences/` | Aesthetic direction, performance budgets, responsive WebGL, and degradation for Three.js / R3F 3D |
-| `.cursor/skills/deep-research/` | Iterative mixed-source research, synthesis, and anti-hallucination recovery |
-| `.cursor/skills/incident-triage-harness/` | Production-style debugging and mitigation workflow |
-| `.cursor/skills/minimax-multimodal-toolkit/` | MiniMax-native image, video, voice, music, and media-processing routing |
+| `anti-slop-design/` | Category-aware design direction, anti-slop checks, UI polish |
+| `3d-web-experiences/` | Aesthetic direction, performance budgets, responsive WebGL, graceful degradation |
+| `deep-research/` | Iterative mixed-source research, synthesis, anti-hallucination recovery |
+| `incident-triage-harness/` | Production-style debugging and mitigation workflow |
+| `minimax-multimodal-toolkit/` | MiniMax-native image, video, voice, music, and media routing |
 
-## Design Principles
+> **Load a skill when** the task has a repeatable workflow too detailed for the core, needs examples or category heuristics, or benefits from progressive disclosure.
 
-### Keep The Core Small
+---
 
-Large always-on prompts waste context and often reduce execution quality. The core rule should contain only durable behavior with high leverage — including **Code Discipline** (read-before-edit, minimal diff, CI discovery, common traps) so per-language cookbooks are unnecessary.
+## ⚡ M2.7 Runtime Modes
 
-### Prefer Repo Truth Over Training Defaults
+The official API exposes both `MiniMax-M2.7` and `MiniMax-M2.7-highspeed`, each with a **204,800**-token context window. The docs describe standard M2.7 at roughly **60 tps** and highspeed at roughly **100 tps**, with highspeed positioned as the same capability profile at lower latency ([text generation docs](https://platform.minimax.io/docs/guides/text-generation) · [API overview](https://platform.minimax.io/docs/api-reference/api-overview)).
 
-Good coding rules teach: inspect manifests and CI first, match existing conventions, verify with the repo's own commands, and load `language-agnostic-patterns` only when designing structure — not when writing everyday syntax.
+| Model | Best fit |
+|------|---------|
+| `MiniMax-M2.7` | Deep repo work, complex synthesis, richer multi-step tasks |
+| `MiniMax-M2.7-highspeed` | Faster interactive loops, shorter verification cycles, lower-latency coding |
 
-### Prefer Capability Framing Over Persona Framing
+---
 
-Rules work better when they say:
+## 🔬 Where M2.7 Feels Different
 
-- inspect first
-- build the smallest proving slice
-- verify before claiming success
+Three areas separate M2.7 from a generic coding model — and the optional rules deepen each without bloating the core:
 
-They work worse when they spend lots of tokens on identity, status, or stylistic self-description.
+- **🤝 Agent Teams** — explicit roles, bounded handoffs, clear escalation points instead of vague multi-agent optimism.
+- **🧩 Skills** — long, high-signal contracts rather than rare workflows stuffed into the always-on prompt.
+- **🔎 Tool Discovery** — discover the live runtime surface, schemas, and MCP shape before promising capability.
 
-### Make Acceptance Explicit
+---
 
-Good rules do not stop at "verify somehow." They define the minimum proof for the kind of claim being made, especially for new app scaffolds and user-facing behavior.
+## 🧭 Model Compatibility
 
-### Trust The Current Environment
+The rules are designed to survive model changes:
 
-Cursor's tool surface changes. The rules should teach behavior that survives those changes instead of freezing old tool names or wrappers.
+- the core rule stays short and durable
+- runtime-specific guidance lives in requestable rules
+- tool advice is written around whatever the environment actually exposes
+- version-sensitive claims are verified at runtime, not frozen into the rules
 
-## Agent Teams, Skills, And Tool Discovery
+This makes the repo useful for MiniMax first, while staying compatible with other Cursor-supported models.
 
-These are the three biggest places where M2.7 feels different from a generic coding model:
+---
 
-- **Agent Teams**: use explicit roles, bounded handoffs, and clear escalation points instead of vague multi-agent optimism
-- **Skills**: invest in long, high-signal skill contracts rather than stuffing rare workflows into the always-on prompt
-- **Tool Discovery**: discover the live runtime surface, schemas, and MCP shape before promising capability
+## 📐 Design Principles
 
-The optional rules in this repo are meant to deepen those areas without bloating the always-on core.
+<table>
+<tr>
+<td width="50%" valign="top">
 
-## Example Patterns
+**Keep the core small**
+Large always-on prompts waste context and often reduce execution quality. The core carries only durable, high-leverage behavior — including Code Discipline, so per-language cookbooks are unnecessary.
 
-If you want concrete M2.7-native patterns instead of only rules, start here:
+</td>
+<td width="50%" valign="top">
 
-- [`examples/agent-teams-product-prototype.md`](examples/agent-teams-product-prototype.md) - a bounded planner/explorer/builder/verifier workflow for multi-agent product work
-- [`.cursor/skills/incident-triage-harness/SKILL.md`](.cursor/skills/incident-triage-harness/SKILL.md) - a large-skill example for incident-style debugging and mitigation
-- [`.cursor/skills/incident-triage-harness/reference.md`](.cursor/skills/incident-triage-harness/reference.md) - companion reference material showing progressive disclosure for a deeper skill
+**Prefer repo truth over training defaults**
+Inspect manifests and CI first, match existing conventions, verify with the repo's own commands. Load architecture rules only when designing structure — not for everyday syntax.
 
-## AGENTS.md For Other IDEs and CLIs
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
 
-`docs/AGENTS.md` is the portable standalone version of MiniMax M2.7 behavior for environments that use agent instruction files but do not support Cursor rules.
-It carries the core behavior directly instead of acting as a thin pointer file.
+**Capability framing over persona framing**
+"Inspect first, build the smallest proving slice, verify before claiming success" beats spending tokens on identity and self-description.
 
-It is focused on:
+</td>
+<td width="50%" valign="top">
 
-- action-first execution
-- solver-loop thinking
-- scope control
-- read-before-edit discipline
-- proportional verification
-- explicit status labels and evidence-backed completion claims
-- current-source version discipline
-- CLI-first scaffolding
-- concise communication
+**Make acceptance explicit**
+Rules don't stop at "verify somehow" — they define the minimum proof per claim type, especially for new scaffolds and user-facing behavior.
 
-To use it elsewhere, copy `docs/AGENTS.md` into the target repo root as `AGENTS.md`.
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
 
-If you use both `AGENTS.md` and `.cursor/rules`, keep them aligned rather than letting them evolve into contradictory prompt layers.
+**Trust the current environment**
+Cursor's tool surface changes. Rules teach behavior that survives those changes instead of freezing old tool names.
 
-The example patterns above are still useful outside Cursor: the agent-team workflow is portable markdown, while the incident-triage skill shows how to structure a large workflow even if your environment uses a different skill system.
+</td>
+<td width="50%" valign="top">
 
-## Warnings
+**No fabricated project metadata**
+Never hand-write `.xcodeproj`, `project.pbxproj`, `.xcworkspace`, or complex `.sln`. Use the CLI/IDE, then work inside the real project.
 
-Never manually fabricate:
+</td>
+</tr>
+</table>
 
-- `.xcodeproj`
-- `project.pbxproj`
-- `.xcworkspace`
-- complex `.sln` or similar IDE-managed project metadata
+---
 
-Use the relevant CLI or IDE instead, then let the agent work inside the real project.
+## 🧪 Example Patterns
 
-## Contributing
+Want concrete M2.7-native patterns instead of only rules? Start here:
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the repo's contribution rules, skill frontmatter contract, and placement guidance for always-on rules, requestable rules, and skills.
+- [`examples/agent-teams-product-prototype.md`](examples/agent-teams-product-prototype.md) — a bounded planner / explorer / builder / verifier workflow for multi-agent product work
+- [`.cursor/skills/incident-triage-harness/SKILL.md`](.cursor/skills/incident-triage-harness/SKILL.md) — a large-skill example for incident-style debugging and mitigation
+- [`.cursor/skills/incident-triage-harness/reference.md`](.cursor/skills/incident-triage-harness/reference.md) — companion reference showing progressive disclosure
 
-## References
+---
+
+## 📦 AGENTS.md For Other IDEs and CLIs
+
+`docs/AGENTS.md` is the portable, standalone version of M2.7 behavior for environments that use agent instruction files but don't support Cursor rules. It carries the core behavior directly instead of acting as a thin pointer.
+
+It focuses on action-first execution, solver-loop thinking, scope control, read-before-edit discipline, proportional verification, explicit status labels, current-source version discipline, CLI-first scaffolding, and concise communication.
+
+> **To use it elsewhere:** copy `docs/AGENTS.md` into the target repo root as `AGENTS.md`. If you run both `AGENTS.md` and `.cursor/rules`, keep them aligned rather than letting them drift into contradictory layers.
+
+---
+
+## 🤝 Contributing
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for contribution rules, the skill frontmatter contract, and placement guidance across always-on rules, requestable rules, and skills.
+
+---
+
+## 📚 References
+
+<details open>
+<summary><b>MiniMax</b></summary>
 
 - [MiniMax M2.7 Release Report](https://www.minimax.io/news/minimax-m27-en)
 - [MiniMax M2.7 Model Page](https://www.minimax.io/models/text/m27)
 - [MiniMax Text Generation Docs](https://platform.minimax.io/docs/guides/text-generation)
 - [MiniMax API Overview](https://platform.minimax.io/docs/api-reference/api-overview)
+- [MiniMax Platform](https://platform.minimax.io)
+
+</details>
+
+<details>
+<summary><b>Cursor & others</b></summary>
+
 - [Cursor Changelog](https://cursor.com/changelog)
 - [Cursor Rules Docs](https://cursor.com/docs/context/rules)
 - [Cursor Agent Best Practices](https://cursor.com/blog/agent-best-practices)
-- [MiniMax Platform](https://platform.minimax.io)
 - [OpenAI Codex Best Practices](https://developers.openai.com/codex/learn/best-practices/)
 - [OpenAI Exec Plans](https://cookbook.openai.com/articles/codex_exec_plans)
+
+</details>
 
 ---
 
 <div align="center">
 
 **Made with care by [Aris Setiawan](https://github.com/madebyaris) at [MiniMax](https://minimax.io)**
+
+<sub>If this sharpened your agent, consider leaving a ⭐ — it helps others find it.</sub>
 
 </div>
