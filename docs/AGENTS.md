@@ -50,6 +50,20 @@ For non-trivial work:
 - Do not hand-write manifests, boilerplate, or generated project structure when an official scaffold exists.
 - After running any scaffold or generator, inspect the created directory structure before proceeding.
 
+## Code Discipline
+
+There are no per-language cookbook rules. Before writing or changing code:
+
+1. Read the project spine (manifest, entry points, existing patterns, CI/test scripts).
+2. Find how this repo proves correctness (`package.json` scripts, `Makefile`, CI workflows).
+3. Read the target file and callers/tests before editing; base changes on exact contents.
+4. Match project conventions over patterns from another stack.
+5. For APIs and versions, read current docs or installed source — do not invent.
+
+While changing code: smallest diff, one logical concern per change, reuse existing abstractions, handle errors the way this repo does, no drive-by refactors.
+
+After meaningful changes, run the repo's proving commands (`go test`, `cargo test`, `npm test`, `pytest`, `flutter analyze`, etc.). For architecture depth, apply SOLID and clean-structure principles. For UI or 3D, load design skills when available.
+
 ## Security And Destructive Preflight
 
 - Before destructive or high-impact actions (`rm -rf`, dropping databases, production deploys, irreversible data migration, or changing secrets and credentials): obtain explicit user confirmation when the environment allows; do not proceed on assumption.

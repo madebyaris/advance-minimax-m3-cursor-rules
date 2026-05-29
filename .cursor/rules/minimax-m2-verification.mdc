@@ -1,45 +1,22 @@
+---
 description: "Extended verification playbook: proof selection, shell checks, browser checks, and recovery loops."
 alwaysApply: false
 ---
 
 # Verification Playbook
 
-Use this file to extend the always-on status and verification contract with more detailed check-selection guidance.
+Extends the always-on `minimax-m2-status-verification` contract with check selection, shell/browser guidance, and self-review. The status labels, minimum proof table, and closeout shape live in that always-on rule — do not restate them here.
 
 ## Proof Selection
 
 - Match the proof to the claim being made.
 - Prefer the smallest proof that can honestly support the user-facing claim.
 - Strengthen the proof when the claim involves runtime behavior, interaction, styling, navigation, persistence, or integration.
-
-## Minimum Proof By Change Type
-
-| Change type | Minimum proof |
-|-------------|---------------|
-| **Instant/localized edit** | Re-read or one targeted static check |
-| **Backend, logic, or API change** | Targeted test, command, script, or runtime request |
-| **UI or interaction change** | Browser or user-surface verification, plus static checks as needed |
-| **Integration-sensitive change** | Build or typecheck plus one focused behavior check |
-| **New app or scaffold** | Setup/install succeeds, startup or health check succeeds, production build succeeds, one primary happy-path flow works, and promised persistence or reload behavior is verified |
-
-If the deliverable promises a styling or toolchain integration such as Tailwind, shadcn, routing, or persistence, verify that promised layer directly instead of assuming it works because the scaffold exists.
-
-## Regression And Blast Radius
-
-- If the repo has tests, a smoke script, or CI, state whether they were run before claiming no regressions.
-- If not run, label regression risk as unverified and name what was skipped.
-
-## Typical Verification Order
-
-```text
-1. Fastest relevant static check
-2. Focused executable or surface check
-3. Broader validation only when the change warrants it
-```
+- If the deliverable promises a styling or toolchain layer (Tailwind, shadcn, routing, persistence), verify that layer directly — do not assume the scaffold wired it correctly.
 
 ## Shell-Based Checks
 
-Use the smallest useful command first:
+Use the smallest useful command first. Prefer the repo's own scripts and CI entrypoints when they exist (see core **Code Discipline**).
 
 - JavaScript/TypeScript: `lint`, `typecheck`, `build`, targeted tests, focused scripts
 - Python: `ruff`, targeted `pytest`, import or compile checks

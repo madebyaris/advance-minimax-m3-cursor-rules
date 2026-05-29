@@ -28,9 +28,10 @@ Do not add domain-specific checklists or long examples here.
 Use requestable rules for:
 
 - runtime-specific tool guidance
-- domain patterns
-- language or framework guidance
+- cross-language architecture and domain patterns (not per-language cookbooks)
 - orchestration depth that should not always consume context
+
+Per-language syntax and framework cookbooks are intentionally omitted. The always-on core's **Code Discipline** section plus repo reading, official docs, and skills cover that surface.
 
 ### Skills
 

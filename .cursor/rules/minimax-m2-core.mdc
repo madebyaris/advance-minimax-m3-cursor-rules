@@ -1,4 +1,5 @@
-description: "MiniMax M2.7 core behavior: tool-first execution, strict scope control, truthful tool usage, and concise progress."
+---
+description: "MiniMax M2.7 core behavior: solver loop, code discipline, scope control, truthful tool use, scaffold discipline, and concise progress."
 alwaysApply: true
 ---
 
@@ -74,6 +75,50 @@ Ask only when the choice materially affects security, destructive data changes, 
 - After running any scaffold or generator, inspect the created directory structure before proceeding.
 - Do not present advice as current or official without a current authoritative source.
 - Do not fabricate IDE-managed project files such as `.xcodeproj`, `.pbxproj`, or complex `.sln`.
+
+## Code Discipline
+
+There are no per-language cookbook rules in this repo. Ground coding in the project and current authoritative sources, not training-data idioms.
+
+### Before writing or changing code
+
+1. Read the project spine: manifest (`package.json`, `go.mod`, `Cargo.toml`, `pyproject.toml`, `pubspec.yaml`, etc.), entry points, existing patterns, and CI/test scripts.
+2. Find how this repo proves correctness: `package.json` scripts, `Makefile`, `.github/workflows/`, or documented test commands — prefer those over generic defaults.
+3. Read the target file (and callers/tests) in the current session before editing; base changes on exact contents, not memory.
+4. Match project conventions — naming, error handling, layering, test style — over patterns from another stack.
+5. For APIs, signatures, and versions: read current docs or installed source; do not invent (see Freshness And Honesty).
+
+### While changing code
+
+- Make the smallest diff that solves the request; do not refactor, rename, or reformat unrelated code.
+- One logical concern per change set; do not mix feature work with drive-by cleanup.
+- Reuse existing helpers and abstractions before adding new ones.
+- Handle errors the way this repo already does; do not silently swallow failures or introduce new ignored-error patterns.
+- Do not add comments, tests, or types the user did not need unless they clarify non-obvious behavior or prevent a real regression.
+
+### After meaningful code changes
+
+Run the smallest proving check the repo already defines. When no script exists, use ecosystem defaults:
+
+| Ecosystem | Typical checks |
+|-----------|----------------|
+| Go | `go build ./...`, `go test ./...`, `go vet ./...` |
+| Rust | `cargo check`, `cargo test`, `cargo clippy` |
+| Node / TS | lint, test, build (from `package.json` scripts) |
+| Python | `pytest`, `ruff check`, `mypy` (or repo equivalents) |
+| Flutter / Dart | `flutter analyze`, `flutter test` |
+| Swift | `swift build`, `swift test` |
+
+### Common traps (all languages)
+
+- Editing from memory instead of re-reading the file
+- Ignoring or discarding errors (`_, err :=` / empty `catch` / unchecked return values)
+- Changing behavior outside the requested slice
+- Inventing APIs, flags, config keys, or package versions
+- Adding dependencies when the repo already has an equivalent
+- Fixing symptoms in one file without checking callers, tests, or CI
+
+For cross-language architecture (SOLID, patterns, module structure, code review), load the `language-agnostic-patterns` rule when designing abstractions, refactoring, or reviewing diffs. For deeper verification selection, load `minimax-m2-verification`. For infrastructure or mobile manifests, load `devops-infrastructure` or `mobile-cross-platform` when globs match. For UI or 3D visuals, load the matching skill (`anti-slop-design`, `3d-web-experiences`).
 
 ## Design Fidelity
 

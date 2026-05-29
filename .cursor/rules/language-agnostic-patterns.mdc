@@ -1,46 +1,23 @@
 ---
-description: "Language-agnostic programming patterns: SOLID principles, design patterns, clean code, architecture decisions applicable across all languages"
+description: "Language-agnostic programming patterns: SOLID, design patterns, clean code, and architecture. Load when refactoring, designing abstractions, or reviewing structure — not for everyday syntax."
 alwaysApply: false
 ---
 
 # Language-Agnostic Programming Patterns
 
-Universal principles and patterns applicable across all programming languages.
+Universal principles for structure, naming, architecture, and testing — applicable across all languages.
 
-## Development Workflow
+Load this rule when refactoring modules, designing abstractions, reviewing architecture, or choosing patterns. For day-to-day coding workflow (read-before-edit, CI discovery, minimal diff, verification), the always-on core **Code Discipline** section is canonical — do not duplicate it here.
 
-### CLI-First Principle
+---
 
-Before manually creating project scaffolding or dependency manifests, check if a CLI tool exists:
+## Change Discipline
 
-| Task | Check for CLI | Example |
-|------|---------------|---------|
-| New project | Scaffolding CLI | `npm create`, `cargo new`, `flutter create` |
-| New component | Generator CLI | `npx shadcn-ui add`, `ng generate`, `rails generate` |
-| New module | Framework CLI | `nest generate module` |
-| Dependencies | Package manager | `npm install`, `pip install` |
-
-### Verification-First Principle
-
-Code is not done until it is verified at a level proportional to the change:
-
-```
-1. Write code
-2. Build/compile: Does it compile?
-3. Lint: Are there warnings?
-4. Run: Does it execute?
-5. Test: Does it work correctly?
-```
-
-### Version-Aware Development
-
-When versions matter:
-
-```text
-1. Search the current version with the actual month and year
-2. Check compatibility with the current stack
-3. Then recommend installation or migration steps
-```
+- Solve the requested problem with the smallest vertical slice; expand only after it works.
+- Prefer extending existing modules over creating parallel implementations.
+- When adding a dependency, confirm the repo does not already solve the same need.
+- Keep public surfaces stable unless the task explicitly requires a breaking change.
+- Leave the codebase in a compilable, testable state after each meaningful step.
 
 ---
 
@@ -292,6 +269,8 @@ Good: // Retry limit based on SLA requirements (see JIRA-1234)
 
 ### Error Handling
 
+Match the repo's existing error style (exceptions, `Result`/`error`, error codes, etc.) before introducing a new pattern.
+
 #### Fail Fast
 - Validate inputs early
 - Throw exceptions for unexpected states
@@ -448,3 +427,38 @@ Layer-based (simpler for smaller apps):
 2. Third-party packages
 3. Local modules
 4. Relative imports
+
+---
+
+## Code Review Heuristics
+
+Use when reviewing diffs, PRs, or your own work before closeout. Complements core **Code Discipline** and the always-on verification contract.
+
+### Correctness
+- Does the change solve the stated problem, or only a symptom?
+- Are edge cases handled the way this repo handles them (null/empty, auth, timeouts)?
+- Do error paths propagate or log usefully — no silent swallowing?
+- If behavior changed, are callers, tests, and docs updated?
+
+### Scope & maintainability
+- Is the diff the smallest honest fix? Any unrelated refactors or drive-by renames?
+- Does new code match naming, layering, and error style of surrounding files?
+- New abstraction justified by reuse, or premature?
+- New dependency necessary, or does the repo already cover the need?
+
+### Tests & verification
+- Is there a test or check proportional to the risk? If not, is that gap called out as `unverified`?
+- Do tests assert behavior, not implementation details?
+- Would CI scripts in this repo catch a regression from this change?
+
+### Security & data
+- User/external input validated and parameterized (SQL, shell, HTML)?
+- Secrets, tokens, or PII absent from logs, commits, and client bundles?
+- AuthZ checked on the server for every sensitive action — not only UI gating?
+
+### Performance (when relevant)
+- N+1 queries, unbounded loops, or loading entire datasets into memory?
+- Caching added only where measured or clearly hot-path?
+
+### Review output shape
+Keep feedback actionable: **issue → impact → suggested fix**. Separate blocking concerns from nits. Prefer pointing to existing repo patterns over generic style opinions.

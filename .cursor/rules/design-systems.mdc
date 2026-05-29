@@ -1,747 +1,103 @@
 ---
-description: "Design system mastery: design tokens, shadcn/ui, Tailwind CSS v4, component composition, theming, animations, and icon systems."
+description: "Design system mechanics: tokens, shadcn/ui, Tailwind v4, composition, theming. Load for UI implementation — aesthetics and anti-slop live in the anti-slop-design skill."
+globs: ["**/*.css", "**/globals.css", "**/tailwind.config.*", "**/components.json", "**/components/ui/**"]
+alwaysApply: false
 ---
 
-# Design System Mastery
+# Design System Mechanics
 
-Comprehensive guide for building and using design systems in modern web applications.
+Token structure, shadcn/ui usage, Tailwind v4 features, and component composition — not aesthetic direction.
 
-## Design Tokens
+For palettes, font pairings, category tone, layout direction, and the slop checklist, load the **`anti-slop-design`** skill (and its `reference.md` for full pages / responsive matrices). For general coding workflow, use core **Code Discipline**.
 
-### Color Tokens
-
-```javascript
-// tailwind.config.js
-module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        // Semantic colors
-        brand: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-          950: '#172554',
-        },
-        // Status colors
-        success: {
-          DEFAULT: '#22c55e',
-          light: '#4ade80',
-          dark: '#16a34a',
-        },
-        warning: {
-          DEFAULT: '#eab308',
-          light: '#facc15',
-          dark: '#ca8a04',
-        },
-        error: {
-          DEFAULT: '#ef4444',
-          light: '#f87171',
-          dark: '#dc2626',
-        },
-        // Surface colors
-        surface: {
-          primary: '#ffffff',
-          secondary: '#f8fafc',
-          tertiary: '#f1f5f9',
-          muted: '#e2e8f0',
-        },
-      },
-    },
-  },
-};
-```
-
-### Typography Tokens
-
-```javascript
-// tailwind.config.js
-theme: {
-  extend: {
-    fontFamily: {
-      sans: ['Inter var', 'system-ui', 'sans-serif'],
-      display: ['Cal Sans', 'system-ui', 'sans-serif'],
-      mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
-    },
-    fontSize: {
-      'xs': ['0.75rem', { lineHeight: '1rem' }],
-      'sm': ['0.875rem', { lineHeight: '1.25rem' }],
-      'base': ['1rem', { lineHeight: '1.5rem' }],
-      'lg': ['1.125rem', { lineHeight: '1.75rem' }],
-      'xl': ['1.25rem', { lineHeight: '1.75rem' }],
-      '2xl': ['1.5rem', { lineHeight: '2rem' }],
-      '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
-      '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
-    },
-    fontWeight: {
-      normal: '400',
-      medium: '500',
-      semibold: '600',
-      bold: '700',
-    },
-  },
-}
-```
-
-### Spacing Tokens
-
-```javascript
-theme: {
-  extend: {
-    spacing: {
-      '0': '0',
-      '1': '0.25rem',
-      '2': '0.5rem',
-      '3': '0.75rem',
-      '4': '1rem',
-      '5': '1.25rem',
-      '6': '1.5rem',
-      '8': '2rem',
-      '10': '2.5rem',
-      '12': '3rem',
-      '16': '4rem',
-      '20': '5rem',
-      '24': '6rem',
-      // Component-specific
-      'card-padding': '1.5rem',
-      'section-gap': '4rem',
-      'input-height': '2.5rem',
-    },
-  },
-}
-```
-
-### Border Radius Tokens
-
-```javascript
-theme: {
-  extend: {
-    borderRadius: {
-      none: '0',
-      sm: '0.25rem',
-      DEFAULT: '0.375rem',
-      md: '0.5rem',
-      lg: '0.75rem',
-      xl: '1rem',
-      '2xl': '1.5rem',
-      '3xl': '2rem',
-      full: '9999px',
-      // Semantic
-      card: '12px',
-      button: '8px',
-      input: '6px',
-      avatar: '50%',
-    },
-  },
-}
-```
+Inspect the project first: `package.json`, `tailwind.config.*`, `globals.css`, `components.json`, existing fonts and icon library. Extend what exists; do not replace the design system unprompted.
 
 ---
 
-## shadcn/ui Patterns
+## Token Shape (semantic, not hex soup)
 
-### Initialization
+Prefer **semantic names** mapped to CSS variables so themes and shadcn primitives stay aligned:
+
+```css
+/* globals.css — Tailwind v4 @theme or :root */
+@theme {
+  --color-background: …;
+  --color-foreground: …;
+  --color-primary: …;
+  --color-muted: …;
+  --color-border: …;
+  --radius-md: 8px;
+  --font-body: …;
+  --font-display: …;
+}
+```
+
+- Derive real values from the project brand or `anti-slop-design` Category Guide — placeholders above are structural only.
+- Do not default to generic blue/indigo scales or `Inter` / `Roboto` unless the project already uses them.
+- Status colors: `--destructive`, `--success`, etc. — keep consistent with shadcn semantic tokens when present.
+
+---
+
+## shadcn/ui
 
 ```bash
-# Initialize shadcn-ui
 npx shadcn@latest init
-
-# Add components
-npx shadcn@latest add button card input label form
-npx shadcn@latest add dialog dropdown-menu select
-npx shadcn@latest add toast alert accordion
+npx shadcn@latest add button card input label form dialog
 ```
 
-### Component Composition
-
-```tsx
-import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-
-// Login form composition
-function LoginForm() {
-  return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle>Welcome back</CardTitle>
-        <CardDescription>
-          Enter your email and password to sign in to your account.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input 
-              id="email" 
-              type="email" 
-              placeholder="m@example.com"
-              required 
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input 
-              id="password" 
-              type="password" 
-              required 
-            />
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox id="remember" />
-            <label
-              htmlFor="remember"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Remember me
-            </label>
-          </div>
-        </form>
-      </CardContent>
-      <CardFooter className="flex flex-col space-y-4">
-        <Button className="w-full">Sign in</Button>
-        <p className="text-sm text-muted-foreground text-center">
-          Don't have an account?{' '}
-          <a href="/register" className="text-primary hover:underline">
-            Sign up
-          </a>
-        </p>
-      </CardFooter>
-    </Card>
-  );
-}
-```
-
-### Dialog Patterns
-
-```tsx
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-
-function SettingsDialog() {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Open Settings</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          {/* Form fields */}
-        </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-}
-```
-
-### Form with Validation
-
-```tsx
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-
-const formSchema = z.object({
-  username: z.string().min(2).max(50),
-  email: z.string().email(),
-  bio: z.string().max(160).optional(),
-});
-
-function ProfileForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: '',
-      email: '',
-    },
-  });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
-
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input type="email" placeholder="m@example.com" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
-  );
-}
-```
+- Compose from primitives (`Card`, `Button`, `Form`, `Dialog`) — do not fork components unless layout truly requires it.
+- Map theme overrides at **CSS variable** layer (`--primary`, `--radius`, `--background`) before editing component source.
+- Forms: use shadcn `Form` + project validation library (e.g. zod + react-hook-form) when already in the stack.
 
 ---
 
-## Tailwind CSS v4 Features
+## Tailwind v4 Essentials
 
-### @theme Directive
-
-```css
-/* app.css */
-@theme {
-  --color-brand: #3b82f6;
-  --color-brand-dark: #2563eb;
-  
-  --font-sans: Inter, system-ui, sans-serif;
-  --font-display: Cal Sans, system-ui, sans-serif;
-  
-  --spacing-card: 1.5rem;
-  
-  --radius-card: 12px;
-  
-  --animate-fade-in: fade-in 0.5s ease-out;
-  --animate-slide-up: slide-up 0.3s ease-out;
-  
-  @keyframes fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  @keyframes slide-up {
-    from { transform: translateY(10px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-}
-
-/* Usage */
-.card {
-  background-color: var(--color-surface-primary);
-  border-radius: var(--radius-card);
-  padding: var(--spacing-card);
-  animation: var(--animate-fade-in);
-}
-```
-
-### Container Queries
-
-```css
-/* Container query for responsive components */
-.card-container {
-  container-type: inline-size;
-}
-
-@container {
-  .card {
-    display: grid;
-    gap: 1rem;
-  }
-  
-  /* Adjust layout based on container width */
-  .card-title {
-    font-size: 1.25rem;
-  }
-}
-
-/* Use in component */
-<div className="card-container">
-  <div className="card">
-    <h2 className="card-title">Title</h2>
-    <p>Content</p>
-  </div>
-</div>
-```
-
-### Advanced Selectors
-
-```css
-/* Peer variants */
-.checkbox:checked ~ .label {
-  text-decoration: line-through;
-  opacity: 0.5;
-}
-
-/* Has modifier */
-.card:has(.image) {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-}
-
-/* First/last letter */
-.prose > p::first-letter {
-  font-size: 2em;
-  font-weight: bold;
-}
-```
+- Define tokens in `@theme` in CSS; avoid duplicating palettes in JS config when v4 CSS-first setup is used.
+- Container queries: `container-type: inline-size` on parent, `@container` for child layout.
+- Use semantic utilities (`bg-background`, `text-muted-foreground`) when shadcn tokens exist — not raw `bg-gray-200` / `text-black`.
 
 ---
 
-## Component Patterns
+## Composition Rules
 
-### Compound Components
-
-```tsx
-import { createContext, useContext, useState } from 'react';
-
-const TabsContext = createContext(null);
-
-function Tabs({ defaultValue, children, className }) {
-  const [activeTab, setActiveTab] = useState(defaultValue);
-  
-  return (
-    <TabsContext.Provider value={{ activeTab, setActiveTab }}>
-      <div className={className}>{children}</div>
-    </TabsContext.Provider>
-  );
-}
-
-function TabsList({ children, className }) {
-  return <div role="tablist" className={`flex border-b ${className}`}>{children}</div>;
-}
-
-function TabsTrigger({ value, children }) {
-  const { activeTab, setActiveTab } = useContext(TabsContext);
-  const isActive = activeTab === value;
-  
-  return (
-    <button
-      role="tab"
-      aria-selected={isActive}
-      onClick={() => setActiveTab(value)}
-      className={`px-4 py-2 ${isActive ? 'border-b-2 border-primary' : ''}`}
-    >
-      {children}
-    </button>
-  );
-}
-
-function TabsContent({ value, children }) {
-  const { activeTab } = useContext(TabsContext);
-  if (activeTab !== value) return null;
-  
-  return <div role="tabpanel">{children}</div>;
-}
-
-// Export compound
-export { Tabs, TabsList, TabsTrigger, TabsContent };
-
-// Usage
-function Example() {
-  return (
-    <Tabs defaultValue="account">
-      <TabsList>
-        <TabsTrigger value="account">Account</TabsTrigger>
-        <TabsTrigger value="password">Password</TabsTrigger>
-      </TabsList>
-      <TabsContent value="account">Account settings</TabsContent>
-      <TabsContent value="password">Password settings</TabsContent>
-    </Tabs>
-  );
-}
-```
-
-### Polymorphic Components
-
-```tsx
-import { forwardRef } from 'react';
-
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
-}
-
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = 'primary', size = 'md', className = '', children, ...props }, ref) => {
-    const variants = {
-      primary: 'bg-blue-600 text-white hover:bg-blue-700',
-      secondary: 'bg-gray-200 text-gray-900 hover:bg-gray-300',
-      ghost: 'bg-transparent hover:bg-gray-100',
-    };
-    
-    const sizes = {
-      sm: 'px-3 py-1 text-sm',
-      md: 'px-4 py-2',
-      lg: 'px-6 py-3 text-lg',
-    };
-    
-    return (
-      <button
-        ref={ref}
-        className={`rounded-lg font-medium transition-colors ${variants[variant]} ${sizes[size]} ${className}`}
-        {...props}
-      >
-        {children}
-      </button>
-    );
-  }
-);
-
-Button.displayName = 'Button';
-```
-
----
-
-## Animation Systems
-
-### Framer Motion
-
-```tsx
-import { motion, AnimatePresence } from 'framer-motion';
-
-// Page transitions
-const pageVariants = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 },
-};
-
-function Page({ children }) {
-  return (
-    <motion.div
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={pageVariants}
-      transition={{ duration: 0.3 }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-// List animations
-function AnimatedList({ items }) {
-  return (
-    <motion.ul layout>
-      <AnimatePresence>
-        {items.map((item) => (
-          <motion.li
-            key={item.id}
-            layout
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            transition={{ duration: 0.2 }}
-          >
-            {item.content}
-          </motion.li>
-        ))}
-      </AnimatePresence>
-    </motion.ul>
-  );
-}
-
-// Gesture animations
-function DraggableCard() {
-  return (
-    <motion.div
-      drag
-      dragConstraints={{ left: -100, right: 100, top: -100, bottom: 100 }}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      Drag me
-    </motion.div>
-  );
-}
-```
-
----
-
-## Icon Systems
-
-### Lucide React
-
-```tsx
-import { 
-  IconArrowLeft,
-  IconArrowRight,
-  IconCheck,
-  IconX,
-  IconSettings,
-  IconUser,
-  IconSearch,
-  IconMenu,
-  IconMoon,
-  IconSun,
-  IconGithub,
-  IconTwitter,
-} from 'lucide-react';
-
-function IconExamples() {
-  return (
-    <div className="flex gap-4">
-      <IconArrowLeft className="w-5 h-5" />
-      <IconCheck className="w-5 h-5 text-green-500" />
-      <IconSettings className="w-5 h-5 animate-spin" />
-    </div>
-  );
-}
-```
-
-### Icon with Button
-
-```tsx
-import { Button } from '@/components/ui/button';
-import { IconPlus, IconSearch } from 'lucide-react';
-
-function IconButtons() {
-  return (
-    <>
-      <Button>
-        <IconPlus className="mr-2 w-4 h-4" />
-        Add Item
-      </Button>
-      
-      <Button variant="ghost" size="icon">
-        <IconSearch className="w-4 h-4" />
-      </Button>
-    </>
-  );
-}
-```
+- One primary CTA per section; secondary actions visually quieter.
+- Consistent `max-width` and horizontal padding across sections (hero → footer).
+- Extract repeated class strings into components — do not paste 20-class strings everywhere.
+- Charts and fixed-height embeds (Chart.js, maps): parent container **must** have explicit height (same discipline as 3D canvases).
 
 ---
 
 ## Dark Mode
 
-### Configuration
-
-```javascript
-// tailwind.config.js
-module.exports = {
-  darkMode: 'class', // or 'media'
-  // ...
-}
-```
-
-### Implementation
-
-```tsx
-import { useTheme } from 'next-themes';
-import { IconMoon, IconSun } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-
-function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-  
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-    >
-      {theme === 'dark' ? (
-        <IconMoon className="w-5 h-5" />
-      ) : (
-        <IconSun className="w-5 h-5" />
-      )}
-    </Button>
-  );
-}
-
-// Usage with dark: prefix
-function Card() {
-  return (
-    <div className="bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100">
-      Content
-    </div>
-  );
-}
-```
+- Prefer `class` strategy with CSS variables when shadcn is present.
+- Pair `--background` / `--foreground` for contrast; test muted text ≥ 4.5:1 on body copy.
 
 ---
 
-## Responsive Design
+## Responsive & Accessibility
 
-### Breakpoint Patterns
-
-```tsx
-// Mobile-first
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-  {/* 1 col mobile, 2 col tablet, 3 col desktop, 4 col large */}
-</div>
-
-// Hide on mobile
-<div className="hidden md:block">Hidden on mobile</div>
-
-// Show on mobile only
-<div className="md:hidden">Mobile only</div>
-
-// Responsive text
-<p className="text-sm md:text-base lg:text-lg">
-  Responsive text
-</p>
-```
+- Mobile-first breakpoints; 44px minimum touch targets on primary actions.
+- Every input has a label; errors use color + text (and icon when helpful).
+- Visible focus rings — never `outline: none` without an alternative.
+- Full responsive hide/reorder/transform guidance: `anti-slop-design` → `reference.md`.
 
 ---
 
-## Accessibility Patterns
+## Verification (UI changes)
 
-### Focus States
+| Change | Minimum proof |
+|--------|----------------|
+| Token/theme | Styles apply in browser; no unstyled flash on load |
+| New component | Renders at 375px and desktop; focus/hover work |
+| Form | Label association, error state, keyboard submit |
+| shadcn add | Component imports resolve; theme tokens applied |
 
-```tsx
-// Visible focus
-<Button className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-  Button
-</Button>
+Browser verification required for layout/interaction claims (see status-verification rule).
 
-// Skip link
-function SkipLink() {
-  return (
-    <a 
-      href="#main-content"
-      className="absolute -top-10 left-0 bg-primary p-3 text-white transition-all focus:top-0"
-    >
-      Skip to main content
-    </a>
-  );
-}
-```
+---
 
-### Screen Reader Only
+## When NOT to Load This File
 
-```tsx
-// Visually hidden but accessible
-<span className="sr-only">Loading...</span>
-<span className="sr-only focus:not-sr-only">
-  Error: Click to retry
-</span>
-```
+- Backend-only or non-UI tasks.
+- Distinctive marketing/landing aesthetic from scratch — start with **`anti-slop-design`** (Step 1: design thinking), then return here for token/shadcn mechanics.

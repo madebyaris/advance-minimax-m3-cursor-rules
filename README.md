@@ -163,7 +163,7 @@ It intentionally lives under `docs/` in this repo so Cursor does not auto-activa
 
 | File | Purpose |
 |------|---------|
-| `.cursor/rules/minimax-m2-core.mdc` | Durable always-on execution behavior: solver loop, scope control, truthful tool use, scaffold discipline, and concise progress |
+| `.cursor/rules/minimax-m2-core.mdc` | Durable always-on execution behavior: solver loop, scope control, code discipline, truthful tool use, scaffold discipline, and concise progress |
 | `.cursor/rules/minimax-m2-status-verification.mdc` | Always-on status and proof contract: exact claim labels, proof matching, and evidence-first closeouts |
 
 ### Runtime Rules
@@ -182,7 +182,15 @@ It intentionally lives under `docs/` in this repo so Cursor does not auto-activa
 
 ### Domain Rules
 
-Language and platform rules now focus on domain-specific patterns rather than repeating the global workflow in every file.
+Requestable rules for cross-cutting domains — not per-language cookbooks. Language-specific idioms come from reading the repo, official docs, and the always-on **Code Discipline** section in the core.
+
+| File | Purpose |
+|------|---------|
+| `.cursor/rules/language-agnostic-patterns.mdc` | SOLID, design patterns, change discipline, code review heuristics |
+| `.cursor/rules/design-systems.mdc` | Tokens, shadcn/ui, Tailwind v4 mechanics (aesthetics → `anti-slop-design` skill) |
+| `.cursor/rules/3d-graphics.mdc` | Three.js / R3F syntax, container sizing, import traps (quality → `3d-web-experiences` skill) |
+| `.cursor/rules/devops-infrastructure.mdc` | Docker, k8s, Terraform, CI/CD — validate-before-apply, infra traps (lean) |
+| `.cursor/rules/mobile-cross-platform.mdc` | Flutter / RN / Expo — CLI-first, architecture, mobile verify (lean) |
 
 ### Skills
 
@@ -199,7 +207,8 @@ Current local skills:
 | Skill | Purpose |
 |------|---------|
 | `.cursor/skills/anti-slop-design/` | Category-aware design direction, anti-slop checks, and UI polish |
-| `.cursor/skills/deep-research/` | Iterative mixed-source research and synthesis |
+| `.cursor/skills/3d-web-experiences/` | Aesthetic direction, performance budgets, responsive WebGL, and degradation for Three.js / R3F 3D |
+| `.cursor/skills/deep-research/` | Iterative mixed-source research, synthesis, and anti-hallucination recovery |
 | `.cursor/skills/incident-triage-harness/` | Production-style debugging and mitigation workflow |
 | `.cursor/skills/minimax-multimodal-toolkit/` | MiniMax-native image, video, voice, music, and media-processing routing |
 
@@ -207,7 +216,11 @@ Current local skills:
 
 ### Keep The Core Small
 
-Large always-on prompts waste context and often reduce execution quality. The core rule should contain only durable behavior with high leverage.
+Large always-on prompts waste context and often reduce execution quality. The core rule should contain only durable behavior with high leverage — including **Code Discipline** (read-before-edit, minimal diff, CI discovery, common traps) so per-language cookbooks are unnecessary.
+
+### Prefer Repo Truth Over Training Defaults
+
+Good coding rules teach: inspect manifests and CI first, match existing conventions, verify with the repo's own commands, and load `language-agnostic-patterns` only when designing structure — not when writing everyday syntax.
 
 ### Prefer Capability Framing Over Persona Framing
 
