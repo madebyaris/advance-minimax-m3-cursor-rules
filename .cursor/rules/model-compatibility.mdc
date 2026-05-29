@@ -35,6 +35,8 @@ The most common failures are:
 
 ## Read-Before-Edit
 
+Canonical workflow lives in the always-on core **Code Discipline** section. In short:
+
 ```text
 1. Read the target file in the current session
 2. Base the change on exact contents

@@ -205,6 +205,55 @@ Use these at each reflection checkpoint. Pick the 2-3 most relevant for the curr
 
 ---
 
+## Anti-Hallucination & Failure Recovery
+
+The six modes above are process-hygiene failures. These are the more dangerous ones for a research output that feeds code or decisions: inventing facts and trusting bad sources. The standard is honesty by construction -- every asserted fact is traceable to a source, and anything unverified is labeled as such.
+
+### 1. Fabricated APIs / signatures / versions
+
+**Symptom**: Asserting a function name, method signature, config flag, CLI option, or version number from memory -- the single most damaging research failure for a coding agent, because it looks authoritative and compiles into a bug.
+
+**Prevention**:
+- Never state an API, signature, flag, or version as current from memory. Confirm it against the official docs, the package's own README, or the installed source before asserting it.
+- For "what's the current version / latest syntax" questions, treat memory as a hypothesis to verify, not an answer.
+- Distinguish "this is how it worked in a version I remember" from "this is how it works now."
+
+**Recovery**: If a search cannot confirm the specific API/version, drop the specific claim. Either (a) cite the doc page that does cover it, (b) state the general approach without the exact identifier, or (c) label it `unverified` and name the exact check (doc page, `package.json`, type definitions) that would resolve it.
+
+### 2. Bad or misattributed citations
+
+**Symptom**: A citation that does not resolve (404 / wrong URL), or a real source that does not actually support the claim attached to it. Fabricated or "close enough" URLs are a hallucination even when the underlying fact is true.
+
+**Prevention**:
+- Only cite a URL you actually fetched or that came back in search results -- never construct a plausible-looking link from memory.
+- Before attributing a claim to a source, confirm the source's content actually states it (the search snippet or fetched page, not the title alone).
+
+**Recovery**: Remove or replace any citation you cannot stand behind. If the fact is real but the source is uncertain, search specifically for the authoritative source, or mark the claim `unverified`.
+
+### 3. Dead-end / no-signal loops
+
+**Symptom**: Repeated searches return nothing usable, or every result is low-quality / contradictory, and the loop continues with no new information.
+
+**Prevention**: Apply the stop conditions from the core loop. After two reformulations of the same sub-query with no usable signal, that path is exhausted.
+
+**Recovery**: Stop searching that path. Report what was tried and what is missing, then escalate with ONE concrete forked question to the user (e.g. "I can't find an authoritative source for X; do you have a preferred doc, or should I proceed on the most-cited community answer and flag it?") rather than burning budget on more variations. This mirrors the repo's stuck-loop policy: after two failed attempts on the same hypothesis, change strategy instead of repeating it.
+
+### 4. Confidence honesty (label, don't imply)
+
+**Symptom**: Presenting single-source, dated, or inferred claims with the same certainty as well-corroborated ones.
+
+**Prevention**: Map every finding to an explicit status before it enters the report:
+
+| Status | Meaning | Use when |
+|--------|---------|----------|
+| `verified` | Confirmed against an authoritative source (or 2+ independent sources) | Official docs, RFC, multiple converging sources |
+| `unverified` | Plausible but not confirmed; the proving check was not run | Single informal source, or memory not yet checked |
+| `assumption` | Depends on inference, not direct evidence | Reasoning across sources, filling a gap |
+
+**Recovery**: Before synthesis, downgrade any claim whose evidence does not match its asserted confidence, and surface the `unverified` / `assumption` items in the report's confidence assessment rather than hiding them in the prose.
+
+---
+
 ## Output Templates
 
 ### Quick Tier -- Concise Answer

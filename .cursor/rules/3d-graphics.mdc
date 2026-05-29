@@ -1,624 +1,156 @@
 ---
-description: "3D graphics development with Three.js, React Three Fiber, and WebGL. Scene setup, performance optimization, 3D models, animations, and best practices."
+description: "Three.js / React Three Fiber syntax: scene setup, R3F hooks, models, controls. Load for 3D code — taste, perf budgets, and mobile WebGL live in the 3d-web-experiences skill."
+globs: ["**/*.{jsx,tsx,js,ts}", "**/three/**", "**/*.glb", "**/*.gltf"]
+alwaysApply: false
 ---
 
-# 3D Graphics Development
+# 3D Graphics — Syntax Reference
 
-Complete guide for building 3D experiences in the browser using Three.js, React Three Fiber, and WebGL.
+Mechanical patterns for Three.js, React Three Fiber (R3F), and `@react-three/drei`. For aesthetic direction, performance tiers, responsive/mobile WebGL, degradation, accessibility, and verified recipes, load the **`3d-web-experiences`** skill (`reference.md` for full scenes and bug catalog).
+
+Verify package APIs against installed versions before asserting prop names.
+
+---
 
 ## CRITICAL: Container Dimensions
 
-**NEVER forget container heights for 3D canvases.**
+A WebGL canvas without a sized parent renders at zero height or wrong aspect.
 
 ```jsx
-// WRONG - Will cause rendering issues
-<div>
-  <Canvas>
-    <Scene />
-  </Canvas>
-</div>
+// WRONG
+<div><Canvas><Scene /></Canvas></div>
 
-// CORRECT - Fixed height container REQUIRED
+// CORRECT — explicit height on the container
 <div style={{ height: '500px', width: '100%' }}>
-  <Canvas>
-    <Scene />
-  </Canvas>
+  <Canvas><Scene /></Canvas>
 </div>
 ```
 
-```javascript
-// Three.js - WRONG
-renderer.setSize(window.innerWidth, window.innerHeight);
-
-// Three.js - CORRECT with container
-const container = document.getElementById('canvas-container');
-renderer.setSize(container.clientWidth, container.clientHeight);
-renderer.domElement.style.width = '100%';
-renderer.domElement.style.height = '400px'; // REQUIRED
-```
+Vanilla Three.js: size the renderer to the **container**, not always `window` — use `ResizeObserver` or container `clientWidth` / `clientHeight`.
 
 ---
 
-## Three.js Essentials
-
-### Scene Setup
-
-```javascript
-import * as THREE from 'three';
-
-// Create scene
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x1a1a1a);
-
-// Create camera
-const camera = new THREE.PerspectiveCamera(
-  75, // FOV
-  window.innerWidth / window.innerHeight, // Aspect ratio
-  0.1, // Near plane
-  1000 // Far plane
-);
-camera.position.set(0, 0, 5);
-
-// Create renderer
-const renderer = new THREE.WebGLRenderer({ 
-  antialias: true, // Smooth edges
-  alpha: true, // Transparent background
-  powerPreference: 'high-performance'
-});
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Performance
-renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-
-// Add to DOM
-document.body.appendChild(renderer.domElement);
-
-// Animation loop
-function animate() {
-  requestAnimationFrame(animate);
-  renderer.render(scene, camera);
-}
-animate();
-
-// Handle resize
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
-```
-
-### Basic Geometries
-
-```javascript
-// Box
-const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
-const boxMaterial = new THREE.MeshStandardMaterial({ color: 0x0077ff });
-const box = new THREE.Mesh(boxGeometry, boxMaterial);
-
-// Sphere
-const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
-const sphere = new THREE.Mesh(sphereGeometry, material);
-
-// Plane
-const planeGeometry = new THREE.PlaneGeometry(10, 10);
-const plane = new THREE.Mesh(planeGeometry, material);
-
-// Custom geometry
-const geometry = new THREE.BufferGeometry();
-const vertices = new Float32Array([
-  0, 0, 0,
-  1, 0, 0,
-  0, 1, 0
-]);
-geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
-```
-
-### Materials
-
-```javascript
-// Basic materials
-const basicMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-const standardMat = new THREE.MeshStandardMaterial({
-  color: 0x0077ff,
-  metalness: 0.5,
-  roughness: 0.5,
-});
-const physicalMat = new THREE.MeshPhysicalMaterial({
-  color: 0xffffff,
-  metalness: 0,
-  roughness: 0,
-  transmission: 1, // Glass-like
-  thickness: 0.5,
-});
-
-// With textures
-const textureLoader = new THREE.TextureLoader();
-const texture = textureLoader.load('/textures/wood.jpg');
-texture.wrapS = THREE.RepeatWrapping;
-texture.wrapT = THREE.RepeatWrapping;
-texture.repeat.set(2, 2);
-
-const texturedMat = new THREE.MeshStandardMaterial({
-  map: texture,
-  normalMap: normalTexture,
-  roughnessMap: roughnessTexture,
-});
-```
-
-### Lighting
-
-```javascript
-// Ambient light - base illumination
-const ambient = new THREE.AmbientLight(0xffffff, 0.5);
-
-// Directional light - sun-like
-const directional = new THREE.DirectionalLight(0xffffff, 1);
-directional.position.set(5, 5, 5);
-directional.castShadow = true;
-directional.shadow.mapSize.width = 2048;
-directional.shadow.mapSize.height = 2048;
-
-// Point light - lightbulb
-const point = new THREE.PointLight(0xff0000, 1, 100);
-point.position.set(0, 0, 0);
-
-// Spot light - focused beam
-const spot = new THREE.SpotLight(0xffffff, 1);
-spot.position.set(0, 10, 0);
-spot.angle = Math.PI / 6;
-spot.penumbra = 0.5;
-
-// Hemisphere light - sky/ground
-const hemisphere = new THREE.HemisphereLight(0xffffff, 0x444444, 0.5);
-
-scene.add(ambient, directional, point, spot, hemisphere);
-```
-
----
-
-## React Three Fiber
-
-### Canvas Setup
+## R3F Canvas Baseline
 
 ```jsx
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
+import { OrbitControls, Environment } from '@react-three/drei';
 
-function Scene() {
+export function Scene() {
   return (
     <div style={{ height: '500px', width: '100%' }}>
-      <Canvas
-        shadows
-        dpr={[1, 2]} // Device pixel ratio
-        gl={{ 
-          antialias: true,
-          alpha: true,
-          powerPreference: 'high-performance'
-        }}
-      >
-        <PerspectiveCamera makeDefault position={[0, 0, 5]} />
-        <OrbitControls enableDamping dampingFactor={0.05} />
-        
-        <ambientLight intensity={0.5} />
+      <Canvas shadows dpr={[1, 2]} camera={{ position: [0, 0, 5], fov: 45 }}>
+        <Environment preset="city" />
+        <ambientLight intensity={0.4} />
         <directionalLight position={[5, 5, 5]} castShadow />
-        
-        <MeshComponent />
+        <Mesh />
+        <OrbitControls enableDamping />
       </Canvas>
     </div>
   );
 }
 ```
 
-### Mesh Components
+Set tone mapping and output color space on the renderer for PBR that is not flat — see `3d-web-experiences` → renderer baseline.
+
+---
+
+## Hooks & Imports (common bugs)
 
 ```jsx
-import { useRef, useFrame } from 'react';
-import { Mesh } from 'three';
+import { useRef, useState } from 'react';
+import { useFrame } from '@react-three/fiber'; // NOT from 'react'
+import type { Mesh } from 'three';
 
 function AnimatedBox() {
-  const meshRef = useRef<Mesh>(null);
-  
-  // Animation loop - runs every frame
-  useFrame((state, delta) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x += delta * 0.5;
-      meshRef.current.rotation.y += delta * 0.3;
-    }
+  const ref = useRef<Mesh>(null);
+  useFrame((_, delta) => {
+    if (ref.current) ref.current.rotation.y += delta;
   });
-  
   return (
-    <mesh ref={meshRef} castShadow receiveShadow>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="blue" />
-    </mesh>
-  );
-}
-
-// Interactive mesh
-function InteractiveMesh() {
-  const [hovered, setHovered] = useState(false);
-  const [active, setActive] = useState(false);
-  
-  return (
-    <mesh
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
-      onClick={() => setActive(!active)}
-      scale={active ? 1.2 : 1}
-    >
-      <sphereGeometry args={[1, 32, 32]} />
-      <meshStandardMaterial 
-        color={hovered ? 'hotpink' : 'orange'} 
-      />
+    <mesh ref={ref}>
+      <boxGeometry />
+      <meshStandardMaterial />
     </mesh>
   );
 }
 ```
 
-### Using Drei Helpers
+| Mistake | Fix |
+|---------|-----|
+| `useFrame` from `react` | Import from `@react-three/fiber` |
+| `<Detail>` from `three` | Use drei `<Detailed distances={[0, 10, 20]}>` with child meshes |
+| `InstancedMesh` from fiber | Use JSX `<instancedMesh>`; `Object3D` from `three` |
+
+---
+
+## Models & Loading
 
 ```jsx
-import { 
-  OrbitControls,
-  PerspectiveCamera,
-  Environment,
-  ContactShadows,
-  Grid,
-  Text3D,
-  Html,
-  useGLTF,
-  useProgress
-} from '@react-three/drei';
+import { Suspense } from 'react';
+import { useGLTF, Html, useProgress } from '@react-three/drei';
 
-// Environment lighting
-function Lighting() {
-  return (
-    <>
-      <Environment preset="city" background={false} />
-      <ambientLight intensity={0.5} />
-    </>
-  );
-}
-
-// Loading 3D models
 function Model({ url }) {
   const { scene } = useGLTF(url);
   return <primitive object={scene} />;
 }
+useGLTF.preload('/models/asset.glb');
 
-// Progress loader
 function Loader() {
   const { progress } = useProgress();
-  return <Html center>{progress.toFixed(0)}% loaded</Html>;
+  return <Html center>{progress.toFixed(0)}%</Html>;
 }
 
-// Grid floor
-function Floor() {
-  return (
-    <Grid
-      args={[10, 10]}
-      cellSize={0.5}
-      cellThickness={0.5}
-      cellColor="#6f6f6f"
-      sectionSize={3}
-      sectionThickness={1}
-      sectionColor="#9d4b4b"
-      fadeDistance={30}
-    />
-  );
-}
-
-// 3D Text
-function Text() {
-  return (
-    <Text3D
-      font="/fonts/helvetiker_regular.typeface.json"
-      size={1}
-      height={0.2}
-      curveSegments={12}
-    >
-      Hello 3D
-      <meshStandardMaterial color="white" />
-    </Text3D>
-  );
-}
+// Wrap async assets:
+<Suspense fallback={<Loader />}><Model url="…" /></Suspense>
 ```
+
+Prefer `.glb` with Draco/Meshopt compression for web (see skill → asset pipeline).
 
 ---
 
-## 3D Models
-
-### Loading Models
+## LOD & Instancing (mechanics)
 
 ```jsx
-import { useGLTF } from '@react-three/drei';
+import { Detailed } from '@react-three/drei';
 
-// GLTF/GLB (recommended for web)
-function GltfModel({ path }) {
-  const { scene, animations } = useGLTF(path);
-  return <primitive object={scene} />;
-}
-
-// Preload for faster loading
-useGLTF.preload('/models/car.glb');
-
-// With animations
-import { useAnimations } from '@react-three/drei';
-
-function AnimatedModel({ path }) {
-  const { scene, animations } = useGLTF(path);
-  const { actions } = useAnimations(animations, scene);
-  
-  useEffect(() => {
-    // Play first animation
-    actions[animations[0].name]?.play();
-  }, [actions, animations]);
-  
-  return <primitive object={scene} />;
-}
+<Detailed distances={[0, 10, 25]}>
+  <HighPolyMesh />
+  <MediumPolyMesh />
+  <LowPolyMesh />
+</Detailed>
 ```
 
-### Model Format Comparison
-
-| Format | Size | Features | Loading |
-|--------|------|----------|---------|
-| **GLTF/GLB** | Small | Animations, materials | GLTFLoader |
-| **OBJ** | Medium | Basic | OBJLoader |
-| **FBX** | Large | Animations | FBXLoader |
-| **USDZ** | Medium | iOS AR | USDZLoader |
-
-### Optimization
-
-```javascript
-// Draco compression (smaller files)
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-
-const dracoLoader = new DRACOLoader();
-dracoLoader.setDecoderPath('/draco/');
-
-const gltfLoader = new GLTFLoader();
-gltfLoader.setDRACOLoader(dracoLoader);
-gltfLoader.load('model.glb', (gltf) => {
-  // Optimize
-  gltf.scene.traverse((child) => {
-    if (child.isMesh) {
-      child.frustumCulled = true;
-      child.castShadow = true;
-      child.receiveShadow = true;
-    }
-  });
-});
-```
+For many copies of the same geometry, use `<instancedMesh>` or drei `<Instances>`. Budgets, DPR clamps, and `frameloop="demand"`: **`3d-web-experiences`**.
 
 ---
 
-## Camera Controls
+## Camera Controls (drei)
 
 ```jsx
-import { 
-  OrbitControls,
-  MapControls,
-  FirstPersonControls,
-  PointerLockControls
-} from '@react-three/drei';
+import { OrbitControls, MapControls } from '@react-three/drei';
 
-// Orbit - rotate around target
-<OrbitControls 
-  enableDamping
-  dampingFactor={0.05}
-  minDistance={2}
-  maxDistance={10}
-  maxPolarAngle={Math.PI / 2}
-/>
-
-// Map - top-down view
-<MapControls 
-  screenSpacePanning={false}
-  minZoom={0.5}
-  maxZoom={10}
-/>
+<OrbitControls enableDamping dampingFactor={0.05} minDistance={2} maxDistance={20} />
 ```
+
+Respect `prefers-reduced-motion` — pause auto-rotate and heavy camera motion (skill → accessibility).
 
 ---
 
-## Performance Optimization
+## Verification (3D changes)
 
-### Instance Mesh
+| Check | How |
+|-------|-----|
+| Renders | Browser load — not blank/black canvas |
+| Console | No WebGL / shader compile errors |
+| Resize | Container height preserved; canvas scales with parent |
+| Mobile | DPR/effects tier reduced when skill budget applies |
 
-```jsx
-import { InstancedMesh, useFrame } from '@react-three/fiber';
-import { useRef, useMemo } from 'react';
-
-function InstancedObjects({ count = 100 }) {
-  const meshRef = useRef();
-  const dummy = useMemo(() => new Object3D(), []);
-  
-  // Position instances
-  useMemo(() => {
-    for (let i = 0; i < count; i++) {
-      dummy.position.set(
-        (Math.random() - 0.5) * 10,
-        (Math.random() - 0.5) * 10,
-        (Math.random() - 0.5) * 10
-      );
-      dummy.updateMatrix();
-      meshRef.current.setMatrixAt(i, dummy.matrix);
-    }
-    meshRef.current.instanceMatrix.needsUpdate = true;
-  }, [count, dummy]);
-  
-  return (
-    <instancedMesh ref={meshRef} args={[null, null, count]}>
-      <boxGeometry args={[0.2, 0.2, 0.2]} />
-      <meshStandardMaterial color="blue" />
-    </instancedMesh>
-  );
-}
-```
-
-### LOD (Level of Detail)
-
-```jsx
-import { LOD, Detailed } from 'three';
-
-function LODMesh() {
-  return (
-    <LOD>
-      <Detail distance={0}>
-        <HighPolyMesh />
-      </Detail>
-      <Detail distance={10}>
-        <MediumPolyMesh />
-      </Detail>
-      <Detail distance={20}>
-        <LowPolyMesh />
-      </Detail>
-    </LOD>
-  );
-}
-```
-
-### Performance Checklist
-
-```
-1. Use InstancedMesh for repeated objects
-2. Enable frustum culling (default)
-3. Set appropriate pixel ratio (max 2)
-4. Use compressed textures (WebP, Basis)
-5. Enable Draco compression for models
-6. Use LOD for distant objects
-7. Dispose geometries/materials when unmounting
-8. Use object pooling for particles
-9. Limit shadow map resolution
-10. Use texture atlases
-```
+Browser verification required; use console + visual check minimum.
 
 ---
 
-## Shaders
+## When NOT to Load This File
 
-### Custom Shader Material
-
-```javascript
-import { shaderMaterial } from '@react-three/drei';
-import { extend } from '@react-three/fiber';
-import * as THREE from 'three';
-
-const CustomShaderMaterial = shaderMaterial(
-  // Uniforms
-  { uTime: 0, uColor: new THREE.Color(1, 0, 0) },
-  // Vertex shader
-  `
-    varying vec2 vUv;
-    void main() {
-      vUv = uv;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    }
-  `,
-  // Fragment shader
-  `
-    uniform float uTime;
-    uniform vec3 uColor;
-    varying vec2 vUv;
-    void main() {
-      gl_FragColor = vec4(uColor * sin(uTime + vUv.x), 1.0);
-    }
-  `
-);
-
-extend({ CustomShaderMaterial });
-
-// Usage
-function ShaderMesh() {
-  const materialRef = useRef();
-  
-  useFrame((state) => {
-    if (materialRef.current) {
-      materialRef.current.uTime = state.clock.elapsedTime;
-    }
-  });
-  
-  return (
-    <mesh>
-      <planeGeometry args={[2, 2]} />
-      <customShaderMaterial ref={materialRef} uColor={new THREE.Color('red')} />
-    </mesh>
-  );
-}
-```
-
----
-
-## Animation
-
-### Using useFrame
-
-```jsx
-function BouncingBall() {
-  const meshRef = useRef();
-  
-  useFrame((state) => {
-    const t = state.clock.getElapsedTime();
-    meshRef.current.position.y = Math.sin(t * 2) * 0.5 + 1;
-  });
-  
-  return (
-    <mesh ref={meshRef}>
-      <sphereGeometry args={[0.5, 32, 32]} />
-      <meshStandardMaterial color="red" />
-    </mesh>
-  );
-}
-```
-
-### Physics with React Three Rapier
-
-```jsx
-import { Physics, RigidBody, CuboidCollider } from '@react-three/rapier';
-
-function PhysicsScene() {
-  return (
-    <Physics gravity={[0, -9.81, 0]}>
-      {/* Ground */}
-      <RigidBody type="fixed" colliders={false}>
-        <CuboidCollider args={[10, 0.1, 10]} />
-        <mesh position={[0, -0.1, 0]}>
-          <planeGeometry args={[20, 20]} />
-          <meshStandardMaterial color="gray" />
-        </mesh>
-      </RigidBody>
-      
-      {/* Bouncing ball */}
-      <RigidBody colliders="ball" restitution={0.8}>
-        <mesh position={[0, 5, 0]}>
-          <sphereGeometry args={[0.5]} />
-          <meshStandardMaterial color="red" />
-        </mesh>
-      </RigidBody>
-    </Physics>
-  );
-}
-```
-
----
-
-## Browser Testing for 3D
-
-Use Cursor browser tools to verify 3D implementations:
-
-```javascript
-// Navigate to page with 3D canvas
-→ browser_navigate(url="http://localhost:3000")
-
-// Check if canvas exists
-→ browser_snapshot()
-
-// Verify WebGL context
-// Check console for WebGL errors
-→ browser_console_messages()
-
-// Check network for model loading
-→ browser_network_requests()
-```
+- 2D UI only — use `design-systems` + `anti-slop-design`.
+- “Make it look good” / hero aesthetic — start with **`3d-web-experiences`** Step 1 (direction + slop catalog), then use this file for syntax.

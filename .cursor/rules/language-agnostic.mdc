@@ -1,8 +1,0 @@
----
-description: "DEPRECATED - Do not load. Use language-agnostic-patterns.mdc instead."
-alwaysApply: false
----
-
-# DEPRECATED — Do Not Load
-
-This file has been replaced by `language-agnostic-patterns.mdc`. Use that rule instead.

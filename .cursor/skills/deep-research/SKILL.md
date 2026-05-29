@@ -3,7 +3,7 @@ name: deep-research
 description: Conducts multi-step deep research on any topic using iterative search, reflection, and synthesis. Use when the user asks to research, investigate, survey, compare, analyze, deep-dive, or explore a topic in depth. Covers web research, codebase analysis, documentation review, and mixed-source investigation.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   category: research
   sources:
     - Cursor-native tool workflows
@@ -238,6 +238,8 @@ The auth middleware uses JWT validation (`src/middleware/auth.ts:42-58`).
 
 ### Confidence Flags
 
+Honesty by construction: never assert an API, version, or fact from memory as current, and never cite a URL you did not actually retrieve. Label each finding `verified` / `unverified` / `assumption`, and if a path yields no usable signal after two reformulations, stop and escalate with one concrete question rather than looping. See the Anti-Hallucination & Failure Recovery section in [reference.md](reference.md).
+
 End the report with an honest assessment:
 
 ```
@@ -278,4 +280,4 @@ DELIVER -> Citations, confidence flags, completion
 
 ## Additional Resources
 
-- For detailed examples and failure mode recovery, see [reference.md](reference.md)
+- For detailed examples, process failure modes, and the anti-hallucination / failure-recovery layer (fabricated APIs, bad citations, dead-end loops, confidence honesty), see [reference.md](reference.md)
