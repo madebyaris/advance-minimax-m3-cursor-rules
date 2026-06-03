@@ -1,18 +1,20 @@
 ---
-description: "Cursor runtime guide: choose the right tool, prefer direct tools, and keep execution parallel where safe."
+description: "Cursor 3 runtime guide: choose the right tool, prefer direct tools, use /worktree, /best-of-n, and Await where they fit, and keep execution parallel where safe."
 alwaysApply: false
 ---
 
-# Cursor Tools Mastery
+# Cursor 3 Tools Mastery
 
-Keep durable behavior in the core rule. Use this file for current Cursor tool-selection patterns.
+Keep durable behavior in the core rule. Use this file for current Cursor 3 tool-selection patterns and the Agents Window surface.
 
 ## Cursor 3 workspace
 
-In Cursor 3, agent work is centered in the **Agents** experience. Open it from the command palette: **Agents Window** (for example `Cmd+Shift+P` on macOS, as described in the [Cursor 3 announcement](https://cursor.com/blog/cursor-3)).
+In Cursor 3, agent work is centered in the **Agents Window**. Open it from the command palette: `Cmd+Shift+P -> Agents Window` on macOS (per the [Cursor 3 announcement](https://cursor.com/blog/cursor-3)). The classic three-pane editor is still available; switch between them at any time.
 
-- **Multi-workspace / multi-repo:** the UI can surface several workspaces at once. Name the repo or root path when handing off work, opening files, or running commands so edits land in the intended tree.
-- **Integrated browser:** prefer the IDE’s built-in browser for local UI verification when it is exposed in your session; it matches the “snapshot-first” flow in Browser Guidance below.
+- **Multi-workspace / multi-repo:** the Agents Window can surface several workspaces at once. Name the repo or root path when handing off work, opening files, or running commands so edits land in the intended tree.
+- **Per-session execution environment:** each agent tab picks its own environment — local working tree, isolated worktree (`/worktree`), cloud sandbox, or remote SSH. State the environment in the handoff contract; it is the unit of isolation.
+- **Per-session model picker:** the model picker lives in the agent tab header (e.g. `composer-2`, `MiniMax-M3`, `auto`). Name the model in the handoff contract.
+- **Integrated browser:** prefer the IDE's built-in browser for local UI verification when it is exposed in your session; it matches the "snapshot-first" flow in Browser Guidance below.
 
 ## Golden Rule
 
@@ -27,13 +29,13 @@ Validate with the lightest useful verification
 
 ## Default Tool Map
 
-**Composer 2 / Cursor agent (typical names in current desktop agents):** the session usually exposes something close to:
+**Cursor 3 / Composer-style agents (typical names in current desktop agents)** — the session usually exposes something close to:
 
-| Step | Tool name | Notes |
-|------|-----------|--------|
+| Step | Tool / command | Notes |
+|------|----------------|-------|
 | Read a path | `Read` | Prefer over shell `cat`/`sed` |
 | Search by pattern | `Grep` | Ripgrep-backed; use for exact symbols and strings |
-| Search by meaning | `SemanticSearch` | “Where does X happen?” not exact text |
+| Search by meaning | `SemanticSearch` | "Where does X happen?" not exact text |
 | List paths | `Glob` | File discovery by pattern |
 | Edit in place | `StrReplace` | Surgical edits; read the file first |
 | Create or replace whole file | `Write` | Use when there is no stable old_string to patch |
@@ -42,24 +44,40 @@ Validate with the lightest useful verification
 | Web | `WebSearch`, `WebFetch` | |
 | Ask user | `AskQuestion` | |
 | Track steps | `TodoWrite` | |
-| Delegate branch work | `Task` | Subagent-style runs (types such as explore, debugger, verifier—see schema) |
+| Delegate branch work | `Task` | Subagent-style runs (types such as explore, debugger, verifier — see schema) |
+| Wait for background work | `Await` | Wait for a background shell, subagent, or a specific output token (e.g. `Ready`, `Error`) |
+| Isolated worktree | `/worktree` | Run a session in its own git worktree so concurrent edits do not collide |
+| Parallel model compare | `/best-of-n` | Run the same task across N models in parallel worktrees, then compare |
 | MCP servers | `call_mcp_tool` (+ resource helpers if present) | Read MCP tool descriptors before calling |
 | Plan mode | `SwitchMode` | When the product exposes a planning mode |
 | Images | `GenerateImage` | Only when the user asks for generated images |
 | Notebooks | `EditNotebook` | `.ipynb` cell edits |
 | Lint diagnostics | `ReadLints` | After substantive edits when available |
+| Multimodal inputs | `Read` against attached image/video paths | M3 native multimodal — treat as first-class inputs |
 
-**Browser:** often MCP tools (for example `cursor-ide-browser`) with names like `browser_snapshot`, `browser_navigate`—follow the server’s schema.
+**Browser:** often MCP tools (for example `cursor-ide-browser`) with names like `browser_snapshot`, `browser_navigate` — follow the server's schema.
 
-**Parallel batching:** issue **multiple independent tool calls in one assistant turn** when the runtime allows it (same idea as batched parallel execution).
+**Parallel batching:** issue **multiple independent tool calls in one assistant turn** when the runtime allows it.
 
-**Other Cursor surfaces** (CLI, older builds, API): names may differ (`ReadFile`, `ApplyPatch`, `Subagent`, etc.). The **exact tool list in the current session always wins**—same principle as `model-compatibility.mdc`.
+**Other Cursor surfaces** (CLI, older builds, API): names may differ (`ReadFile`, `ApplyPatch`, `Subagent`, etc.). The **exact tool list in the current session always wins** — same principle as `model-compatibility.mdc`.
+
+## Pick The Right Surface (Cursor 3)
+
+| Need | Best fit |
+|------|----------|
+| Trivial localized edit | IDE inline edit |
+| Multi-file feature in one repo | Single agent session in the Agents Window |
+| Risky exploration, parallel branches, anything that must not collide with the main tree | `/worktree` (isolated git worktree) |
+| High-stakes decision (design, architecture, refactor) where you want a second opinion | `/best-of-n` (run across 2–4 models, then pick or merge) |
+| Long-running shell, subagent, or CLI that takes seconds-to-minutes | `Await` on the background job, or a specific output token |
+| Work that should keep running while you walk away | Cloud session, then hand back to local when environment-specific proof is needed |
 
 ## Read and Search Guidance
 
 - Prefer direct read/search tools over shell equivalents.
 - Batch independent reads and searches in one turn when the session allows parallel calls.
 - Use `SemanticSearch` for "how/where/what handles this?" questions, not exact symbol lookups.
+- For long files or large repos, prefer targeted `Grep` or slice-sized `Read` over full re-ingest; see `minimax-m3-long-context` for the M3 1M-context version of this.
 
 ## Editing Guidance
 
@@ -67,6 +85,7 @@ Validate with the lightest useful verification
 - Use `StrReplace` for focused in-file edits; use `Write` for new files or full rewrites when patch context is awkward.
 - Keep edits coherent; avoid thrashing the same file with many tiny changes.
 - Re-read or verify after editing.
+- For UI changes, re-read the post-change screenshot/frame when one is available and cite the path in the report.
 
 ## Shell Guidance
 
@@ -76,11 +95,13 @@ Use `Shell` for:
 - git inspection
 - long-running verification commands when no dedicated tool exists
 
-Before starting dev servers or watchers, check whether one is already running.
+Before starting dev servers or watchers:
+- check the terminals folder for an existing one
+- when one is started, `Await` its output token (`Ready`, `Compiled`, etc.) instead of polling
 
 ## Browser Guidance
 
-When browser tools exist (including Cursor’s integrated browser in supported builds):
+When browser tools exist (including Cursor's integrated browser in supported builds):
 
 ```text
 1. Check tabs
@@ -97,6 +118,7 @@ Do not promise a browser-only or canvas-style deliverable until you have confirm
 
 - Prefer direct tools exposed in the prompt over wrapper APIs.
 - If an MCP server exposes resources instead of action tools, use the resource functions the environment provides.
+- **MCP Apps structured content** (new in Cursor 3): when a tool returns structured content, prefer the structured form over prose dumping; surface it in the report faithfully.
 - Keep repo guidance generic enough to survive tool and server renames.
 
 ## Task and subagent guidance
@@ -109,10 +131,13 @@ When multiple delegations are truly independent:
 - keep one synthesis step in the main thread after they return
 - avoid overlap that makes two agents inspect the same surface without a reason
 
+For long-running delegations, `Await` the subagent result instead of polling.
+
 Good parallel split examples:
 - frontend investigation vs backend investigation
 - version research vs codebase pattern search
 - debugger pass vs verifier pass
+- `/best-of-n` style: same prompt to 2–3 models in isolated worktrees
 
 Bad parallel split examples:
 - two agents editing the same file
@@ -134,7 +159,7 @@ For `Task` specifically:
 ```text
 1. Split the work into independent slices
 2. Launch multiple Task calls in one message when they do not depend on each other
-3. Wait for all results
+3. Wait for all results (use Await for long-running ones)
 4. Synthesize centrally before acting
 ```
 

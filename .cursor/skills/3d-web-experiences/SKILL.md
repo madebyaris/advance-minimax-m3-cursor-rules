@@ -1,16 +1,18 @@
 ---
 name: 3d-web-experiences
 description: >
-  Build distinctive, performant, production-grade 3D on the web with Three.js, React Three Fiber, and WebGL. Use when the user asks to "build a 3D scene", "add a 3D hero/landing", "make a product viewer/configurator", mentions three.js / react-three-fiber / r3f / drei / webgl / shaders, or asks to make an existing 3D scene "look good", run smoothly, or work on mobile. Covers aesthetic direction (anti-slop for 3D), lighting/material/post-processing, performance budgets, responsive WebGL, graceful degradation, and accessibility.
+  Build distinctive, performant, production-grade 3D on the web with Three.js, React Three Fiber, and WebGL. Use when the user asks to "build a 3D scene", "add a 3D hero/landing", "make a product viewer/configurator", mentions three.js / react-three-fiber / r3f / drei / webgl / shaders, or asks to make an existing 3D scene "look good", run smoothly, or work on mobile. Covers aesthetic direction (anti-slop for 3D), lighting/material/post-processing, performance budgets, responsive WebGL, graceful degradation, accessibility, and M3 multimodal parity from reference video/frames.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   category: design
   sources:
     - Three.js official documentation (threejs.org/docs)
     - React Three Fiber docs (r3f.docs.pmnd.rs)
     - drei docs (drei.docs.pmnd.rs)
     - react-postprocessing docs (react-postprocessing.docs.pmnd.rs)
+  model_assumptions:
+    - multimodal-input: recommended
 ---
 
 # 3D Web Experiences ("3D Taste + Production Layer")
@@ -40,6 +42,15 @@ Before writing 3D code, inspect the project:
 5. If a scene already exists, respect its conventions and extend; do not rebuild from scratch.
 
 ---
+
+## Step 0.5: Multimodal Reference Parity (M3)
+
+When the user attaches a reference video, a recorded interaction, or a sequence of frames showing the look they want:
+
+- Read the actual file/frame, not a guessed description of it. On M3 the runtime can ingest video natively; treat the attachment as ground truth.
+- For "make it look like this" requests, the reference is the contract. State the path in your closeout.
+- For reference clips with motion, pick a small number of representative frames (start, mid, end) and reason about the in-between motion explicitly — do not invent the motion.
+- After the build, re-read the rendered state (post-change frame) and compare against the reference; do not claim parity from memory.
 
 ## Step 1: Commit to a 3D Direction
 

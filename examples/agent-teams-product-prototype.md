@@ -1,12 +1,12 @@
-# M2.7 Example: Agent-Team Product Prototype
+# M3 Example: Agent-Team Product Prototype
 
-This example shows a concrete M2.7-style agent-team workflow for turning a vague product request into a verified prototype without collapsing every responsibility into one agent.
+This example shows a concrete M3 + Cursor 3 agent-team workflow for turning a vague product request into a verified prototype without collapsing every responsibility into one agent.
 
 Use it together with:
 
 - `.cursor/rules/agent-teams.mdc`
 - `.cursor/rules/cursor-agent-orchestration.mdc`
-- `.cursor/rules/minimax-m2-status-verification.mdc`
+- `.cursor/rules/minimax-m3-status-verification.mdc`
 
 ## When To Use
 
@@ -103,11 +103,16 @@ Each handoff should include:
 
 ```text
 Goal:
+Repo / workspace root:
+Environment: local | /worktree | cloud | SSH
+Model: MiniMax-M3 | composer-2 | auto | ...
 Owned surface:
 What changed or was learned:
 Open risks or assumptions:
 Next required action:
 ```
+
+The environment and model fields are M3 + Cursor 3 defaults — name them so a reviewer can reproduce the run and so that `/best-of-n` comparisons stay legible.
 
 ## Example Delegation
 
@@ -159,13 +164,22 @@ Return:
 Do not edit unless asked.
 ```
 
-## Why This Pattern Fits M2.7
+## Why This Pattern Fits M3 + Cursor 3
 
-It matches the official M2.7 emphasis on:
+It matches the M3 + Cursor 3 emphasis on:
 
 - role boundaries
 - multi-agent collaboration
 - strong repo-scale reasoning
-- evidence-backed delivery
+- evidence-backed delivery (`verified` / `unverified` / `blocked` / `multimodal-grounded`)
+- 1M-token long-context discipline when the team reads across a large repo
+- native multimodal input when the user attaches a mock, screenshot, or screen recording
+
+A few M3 + Cursor 3 mechanics that make this pattern stronger:
+
+- **`/best-of-n` for the design / architecture decision.** When the team needs to pick the strongest architecture, layout, or refactor approach, run the same prompt to 2–4 models in parallel `/worktree` sessions and synthesize. The "verifier" role then reads all outputs and picks or merges.
+- **`Await` for long-running branches.** If the verifier triggers a long-running check (browser load, e2e run, build), do not poll; use the `Await` tool on the background shell or a specific output token (`Ready`, `Compiled`, `Error`).
+- **Visual work goes through `multimodal-grounded`.** When the prototype has visual claims (a screenshot, a mock, a recorded interaction), the verifier re-reads the actual post-change frame and states `multimodal-grounded` — not `verified` from prose memory.
+- **Long-context loader plan.** On M3 the planner should also produce a 4–6 line loader plan (what is in context at start, what to add verbatim, what to summarize, what to drop, when to compress) before kicking off the explorer and builder. See the `minimax-m3-long-context` skill.
 
 The point is not to maximize the number of agents. The point is to use role separation only when it reduces context load and improves verification quality.

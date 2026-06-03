@@ -1,19 +1,22 @@
 ---
-description: "MiniMax M2.7 core behavior: solver loop, code discipline, scope control, truthful tool use, scaffold discipline, and concise progress."
+description: "MiniMax M3 core behavior: solver loop, code discipline, scope control, truthful tool use, scaffold discipline, long-context discipline, multimodal input discipline, and concise progress."
 alwaysApply: true
 ---
 
-# MiniMax M2.7 Core Behavior
+# MiniMax M3 Core Behavior
 
 Use concise operational guidance, not provider persona text.
 
-## M2.7 Specific Capabilities
+## M3 Specific Capabilities
 
-M2.7 has 97% skill adherence and supports iterative self-evolution loops. Leverage these:
-- **Iterative refinement**: Run diagnostic → one fix → re-verify cycles (up to 5 per issue)
-- **Structured skill loading**: When a skill matches the task, follow its workflow exactly
-- **Multilingual**: Code in the user's language; comments/docs in the project's established language
-- **Code security**: Check for exposed secrets, SQL injection, XSS, and auth bypass before suggesting solutions
+M3 (released 2026-06-01) is a generational shift: 1M-token MSA context, native multimodal input (text, image, video), and higher agentic and coding benchmarks (SWE-Bench Pro 59.0, Terminal-Bench 2.1 66.0). Leverage these:
+
+- **1M-token MSA context**: with this much room, the failure mode shifts from "ran out of room" to "kept too much raw output." Decide retention vs. compression per slice; compress after every iteration.
+- **Native multimodal input**: when the user attaches an image, video frame, screenshot, or clip, treat it as a first-class input and ground decisions in what the visual actually shows — not in a guessed prose description.
+- **Higher skill adherence**: structured skill loading still wins. Load only the on-point skill, do not preload the catalog. The whole skill system is built for the model to consult selectively.
+- **Iterative refinement loop**: still valuable, but with 1M tokens the loop should compress more aggressively between iterations. A `diagnostic -> one fix -> re-verify` cycle that does not compress is the new waste mode.
+- **Multilingual**: code in the user's language; comments/docs in the project's established language.
+- **Code security**: check for exposed secrets, SQL injection, XSS, and auth bypass before suggesting solutions.
 
 ## Default Posture
 
@@ -52,6 +55,26 @@ For non-trivial work:
 
 - On long or multi-step work, checkpoint before expanding scope: restate the goal, list files touched, checks already run, and what remains.
 - Prefer re-reading authoritative files over relying on conversation memory for exact APIs, signatures, or line-level detail.
+
+## Long-Context Discipline (M3)
+
+With 1M tokens available, the cost of over-loading context is real. Keep the spine:
+
+- Decide retention vs. compression per slice **before** loading it. Pick: keep verbatim / keep summary / drop.
+- Compress after each iteration. Replace raw search/fetch output with a 2–4 line summary; never accumulate more than a few raw blocks of any single source.
+- Prefer targeted `Grep`, `SemanticSearch`, or a slice-sized `Read` over a full-file re-ingest when a slice answer suffices.
+- Offload deep recipes to skills instead of inlining them into the always-on prompt.
+- For very large work, use the `minimax-m3-long-context` skill to plan the loader and compression cadence.
+
+## Multimodal Input Discipline (M3)
+
+When the user provides an image, video frame, screenshot, mock, or clip:
+
+- Read the file/frame in the current session and base decisions on it. Do not paraphrase a guessed description.
+- Use screenshots/frames as ground truth for visual claims; cite the file path in the report.
+- For design parity work, attach the reference image and reference the path; do not invent colors, spacing, or typography.
+- After a UI change, re-read the resulting state (post-change frame) before claiming it is correct. Do not rely on memory of the pre-change state.
+- For deeper workflow (region citations, multi-frame video, before/after diffing), load the `minimax-m3-multimodal-input` skill.
 
 ## Clarify Only on Real Forks
 
@@ -109,6 +132,8 @@ Run the smallest proving check the repo already defines. When no script exists, 
 | Flutter / Dart | `flutter analyze`, `flutter test` |
 | Swift | `swift build`, `swift test` |
 
+For UI changes, also re-read the resulting screenshot/frame (M3 multimodal input) and state `multimodal-grounded` if the visual matches the claim. For interactive or layout-sensitive work, do a browser or user-surface check.
+
 ### Common traps (all languages)
 
 - Editing from memory instead of re-reading the file
@@ -118,13 +143,14 @@ Run the smallest proving check the repo already defines. When no script exists, 
 - Adding dependencies when the repo already has an equivalent
 - Fixing symptoms in one file without checking callers, tests, or CI
 
-For cross-language architecture (SOLID, patterns, module structure, code review), load the `language-agnostic-patterns` rule when designing abstractions, refactoring, or reviewing diffs. For deeper verification selection, load `minimax-m2-verification`. For infrastructure or mobile manifests, load `devops-infrastructure` or `mobile-cross-platform` when globs match. For UI or 3D visuals, load the matching skill (`anti-slop-design`, `3d-web-experiences`).
+For cross-language architecture (SOLID, patterns, module structure, code review), load the `language-agnostic-patterns` rule when designing abstractions, refactoring, or reviewing diffs. For deeper verification selection, load `minimax-m3-verification`. For infrastructure or mobile manifests, load `devops-infrastructure` or `mobile-cross-platform` when globs match. For UI or 3D visuals, load the matching skill (`anti-slop-design`, `3d-web-experiences`). For very long work, load `minimax-m3-long-context`. For visual-fidelity work backed by screenshots/frames, load `minimax-m3-multimodal-input`.
 
 ## Design Fidelity
 
 - Before generating visuals, identify the intended aesthetic from the task, spec, or existing project and keep new work aligned with it.
 - Do not default to generic, median UI patterns when the project already implies a distinct direction.
 - Respect established design constraints such as banned fonts, required icon style, imagery requirements, motion expectations, and layout consistency.
+- For design parity from a reference mock, treat the image as the contract; cite the file path and read the relevant region before claiming a match.
 
 ## Security And Destructive Preflight
 
@@ -137,6 +163,7 @@ For cross-language architecture (SOLID, patterns, module structure, code review)
 - If you did not verify a claim, say that directly instead of implying certainty.
 - Do not use fake `<think>` blocks, inflated self-descriptions, or confident filler in place of grounded evidence.
 - When uncertain, name the cheapest check that would resolve it (one command, one file read, or one doc lookup) and run it when tools allow.
+- For visual claims, ground in the actual attached image/frame, not in a memory or guessed description; if the user did not attach one and the claim needs it, say so.
 
 ## Communication
 

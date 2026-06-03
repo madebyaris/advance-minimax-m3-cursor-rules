@@ -4,15 +4,18 @@ description: >
   MiniMax-native multimodal workflow for image, video, voice, music, and media-processing tasks.
   Use when the user asks to generate image/video/audio assets, wants MiniMax-specific media APIs,
   needs TTS or voice workflows, wants reproducible local media outputs, or needs FFmpeg-style
-  processing around generated media.
+  processing around generated media. M3's native multimodal input means image/video inputs can
+  be fed directly to the model for grounded decisions in coding work.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   category: media-generation
   sources:
     - MiniMax platform media capabilities
     - Current runtime tool surface
     - FFmpeg documentation
+  model_assumptions:
+    - multimodal-input: required
 ---
 
 # MiniMax Multimodal Toolkit
@@ -52,6 +55,7 @@ Do not jump into API integration when a direct generation path is enough.
 | Existing media needs editing | Use local tooling such as FFmpeg when available | Avoid re-generation unless needed |
 | App feature using MiniMax media APIs | Implement integration code and verify with a focused request or fixture | Prefer smallest vertical slice |
 | Planning or research only | Gather current docs and synthesize | Do not implement prematurely |
+| **M3 input path: read an attached image / video frame as ground truth** | Feed the file/frame into the model directly via the runtime's multimodal input — no separate "describe the image" step | Use for design parity, error UI triage, screenshot-driven dev. See the `minimax-m3-multimodal-input` skill for the full workflow. |
 
 ---
 
@@ -69,6 +73,16 @@ Before any implementation or generation:
    - whether the user wants direct generation or product integration
 
 ---
+
+## M3 Native Multimodal Input
+
+On M3, image and video inputs can be fed to the model directly. This collapses the older "read the file, write a text description, then reason about the description" loop into a single grounded step:
+
+- The user attaches an image, screenshot, mock, or short clip; the runtime passes it to M3 as native input.
+- Ground decisions in what the image actually shows. Quote visible text, cite regions, name the file path.
+- For the full input-handling workflow (region citations, before/after diffing, multi-frame video, design parity), load the `minimax-m3-multimodal-input` skill.
+
+This skill (`minimax-multimodal-toolkit`) remains the source of truth for **generation** paths — calling MiniMax media APIs, FFmpeg pipelines, and reproducible local outputs. The two skills are complementary: this one for output, `minimax-m3-multimodal-input` for input.
 
 ## Core Rules
 

@@ -1,9 +1,9 @@
 ---
-description: "MiniMax M2.7 tool discovery: runtime inventory, schema-first MCP use, capability mapping, and safe fallbacks."
+description: "MiniMax M3 + Cursor 3 tool discovery: runtime inventory, schema-first MCP use, MCP Apps structured content, capability mapping, and safe fallbacks."
 alwaysApply: false
 ---
 
-# Tool Discovery
+# Tool Discovery (Cursor 3 + M3)
 
 Use this rule when the runtime surface is unfamiliar, tool-heavy, or likely to differ across environments.
 
@@ -13,7 +13,7 @@ Inventory the current surface in this order:
 
 1. direct tools exposed in the prompt
 2. browser or IDE-native tools exposed in the prompt
-3. **Cursor Marketplace** (or team marketplace) plugins already installed—same schema-first rules as other MCPs; discover tools and resources from each plugin’s descriptors before calling
+3. **Cursor Marketplace** (or team marketplace) plugins already installed — same schema-first rules as other MCPs; discover tools and resources from each plugin's descriptors before calling
 4. MCP tools and resources with their current schemas (including project-configured servers)
 5. web docs only when discovery or versions still remain unclear
 
@@ -22,6 +22,7 @@ Inventory the current surface in this order:
 - Read the current schema or descriptor before calling unfamiliar MCP tools.
 - Match the task step to the smallest tool that can honestly do it.
 - Do not infer hidden parameters or old wrapper names from memory.
+- **MCP Apps structured content (Cursor 3)**: when a tool returns structured content, prefer the structured form over reconstructing from prose. Surface it in the report faithfully.
 
 ## Capability Mapping
 
@@ -31,6 +32,8 @@ Before acting, translate the task into:
 - what must be changed
 - what must be verified
 - which currently exposed tool best serves each step
+
+For visual-fidelity work, also translate into: which image/frame must be read, and which post-change frame must be re-read after editing.
 
 ## Discovery Loop
 
@@ -55,3 +58,4 @@ Before acting, translate the task into:
 - using shell as the first choice when a direct tool is exposed
 - calling MCP tools without reading current schemas
 - hiding tool uncertainty behind confident prose
+- ignoring MCP Apps structured content and dumping it as prose

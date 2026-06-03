@@ -1,5 +1,5 @@
 ---
-description: "MiniMax M2.7 skill authoring: when to use skills, how to structure them, and how to keep them deep without duplicating the core."
+description: "MiniMax M3 + Cursor 3 skill authoring: when to use skills, how to structure them, how to keep them deep without duplicating the core, and how to declare model assumptions."
 alwaysApply: false
 ---
 
@@ -40,17 +40,21 @@ metadata:
   category: workflow
   sources:
     - Official docs or standards
+  model_assumptions: []   # optional; see below
 ---
 ```
 
 Rules:
-
 - `name` must match the directory name exactly.
 - `description` must include concrete trigger language, not vague capability claims.
 - `license` should be explicit so skills stay portable outside this repo.
 - `metadata.version` should change when the skill meaningfully evolves.
 - `metadata.category` should describe the domain or workflow.
 - `metadata.sources` should name current authoritative sources when the skill depends on external behavior.
+- `metadata.model_assumptions` (optional) should name the model capabilities the skill depends on, e.g.:
+  - `multimodal-input: required` — the skill expects the user can attach images/video that the model can read natively
+  - `long-context: recommended` — the skill expects a 1M-class context window for the loader to be useful
+  - `cursor-3-runtime: required` — the skill expects the Cursor 3 / Agents Window surface
 
 ## Progressive Disclosure
 
@@ -63,6 +67,7 @@ Rules:
 - State concrete triggers in user-language, not vague capability claims.
 - Define inputs, outputs, stop conditions, and common failure modes.
 - Prefer one coherent workflow per skill over broad omnibus instructions.
+- If a skill depends on multimodal input, name that in the frontmatter and in the opening paragraph so the agent does not try to use it in a text-only environment.
 
 ## Anti-Duplication
 

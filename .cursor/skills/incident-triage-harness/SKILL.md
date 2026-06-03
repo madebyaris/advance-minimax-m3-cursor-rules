@@ -1,14 +1,16 @@
 ---
 name: incident-triage-harness
-description: Production-style incident triage workflow for logs, metrics, code, and safe mitigations. Use when debugging alerts, regressions, outages, or suspicious runtime behavior.
+description: Production-style incident triage workflow for logs, metrics, code, safe mitigations, and M3 multimodal visual evidence (screenshots, screen recordings). Use when debugging alerts, regressions, outages, or suspicious runtime behavior.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   category: debugging
   sources:
     - Incident response and SRE triage practice
     - Evidence-first debugging workflows
     - Production mitigation and verification patterns
+  model_assumptions:
+    - multimodal-input: recommended
 ---
 
 # Incident Triage Harness
@@ -35,6 +37,15 @@ Before doing anything else, identify:
 4. **Available evidence**: logs, traces, dashboards, DB data, repo history, local repro, tests
 
 Do not jump into code edits until you have at least one concrete failure hypothesis.
+
+### Step 0a: Visual Evidence (M3)
+
+When the user attaches a screenshot of a broken UI, a screen recording of the failure, or a short clip of the symptom, the visual is primary evidence — not a supplement.
+
+- Read the actual file in the current session. Quote the visible text (error message, broken layout, empty state) directly in the report.
+- Name the file path in the closeout; do not describe the image from memory.
+- For a UI regression, treat the screenshot as the "what is broken" input. Treat a re-rendered post-fix frame as the "what is fixed" proof (`multimodal-grounded`).
+- For animation / interaction bugs, prefer a short clip over a single frame; cite the timestamp region of the relevant behavior.
 
 ---
 

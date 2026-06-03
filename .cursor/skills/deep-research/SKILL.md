@@ -1,14 +1,16 @@
 ---
 name: deep-research
-description: Conducts multi-step deep research on any topic using iterative search, reflection, and synthesis. Use when the user asks to research, investigate, survey, compare, analyze, deep-dive, or explore a topic in depth. Covers web research, codebase analysis, documentation review, and mixed-source investigation.
+description: Conducts multi-step deep research on any topic using iterative search, reflection, and synthesis. Use when the user asks to research, investigate, survey, compare, analyze, deep-dive, or explore a topic in depth. Covers web research, codebase analysis, documentation review, mixed-source investigation, and M3 long-context compression discipline.
 license: MIT
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   category: research
   sources:
     - Cursor-native tool workflows
     - Documentation review and comparative research practice
     - Repo and web synthesis patterns
+  model_assumptions:
+    - long-context: recommended
 ---
 
 # Deep Research
@@ -154,6 +156,8 @@ Compression template:
 ```
 
 Drop tangential results immediately. Only carry forward "directly answers" and "provides context" findings.
+
+**M3 nudge:** with a 1M-token context, the failure mode shifts from "ran out of room" to "kept too much raw output." Apply the compression template aggressively. If you have run 3+ searches without compressing, the next reflection must include a compression pass. See `minimax-m3-long-context` for the broader retention/discard plan.
 
 ### Reflect (after every 2-3 searches)
 

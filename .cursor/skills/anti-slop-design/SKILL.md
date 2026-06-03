@@ -1,14 +1,16 @@
 ---
 name: anti-slop-design
-description: Category-aware design skill that builds distinctive, production-grade UIs. Palettes, font pairings, UX patterns, shadcn/token integration, empty-error-loading copy, secondary slop signals, and a pre-ship second pass. Framework-agnostic.
+description: Category-aware design skill that builds distinctive, production-grade UIs. Palettes, font pairings, UX patterns, shadcn/token integration, empty-error-loading copy, secondary slop signals, multimodal design parity from mocks, and a pre-ship second pass. Framework-agnostic.
 license: MIT
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   category: design
   sources:
     - Project design systems and token files
     - Platform accessibility guidance
     - Established product and editorial design patterns
+  model_assumptions:
+    - multimodal-input: recommended
 ---
 
 # Anti-Slop Design Skill ("Taste Layer")
@@ -79,6 +81,16 @@ These patterns are nearly as common as the list above; treat them as soft bans u
 - **Generic microcopy**: "Welcome!", "No data available", "Something went wrong" with no next step — write voice-specific, actionable copy (see reference.md).
 
 ---
+
+## Multimodal Design Parity (M3)
+
+When the user provides a design mock, screenshot, or reference image, treat the image as the contract for the build. On M3 the runtime can read the image directly; do not paraphrase from a guessed description.
+
+- `Read` the image file in the current session and reference the exact path in your closeout.
+- Cite the **region** you are matching (hero block, top-right nav, footer) when reviewing deviations — generic "looks right" is not a citation.
+- After the build, re-read the resulting state (post-change screenshot/frame) and compare against the reference; state "visually matched" only when you actually opened both.
+- If the reference is a low-fidelity wireframe, design for the wireframe's intent, not its pixel values; if the reference is a high-fidelity mock, match the values.
+- For multi-image sets (desktop, tablet, mobile mockups), re-read each before claiming a responsive match.
 
 ## Stack And Kit Integration
 
