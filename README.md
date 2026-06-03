@@ -4,7 +4,7 @@
 
 #### A durable execution spine for repo-scale engineering, agent teams, deep skills, and dynamic tool use on M3 + Cursor 3.
 
-[![Stars](https://img.shields.io/github/stars/madebyaris/advance-minimax-m2-cursor-rules?style=flat-square&color=8b5cf6)](https://github.com/madebyaris/advance-minimax-m2-cursor-rules/stargazers)
+[![Stars](https://img.shields.io/github/stars/madebyaris/advance-minimax-m3-cursor-rules?style=flat-square&color=8b5cf6)](https://github.com/madebyaris/advance-minimax-m3-cursor-rules/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![Cursor 3](https://img.shields.io/badge/Tested-Cursor%203-blue?style=flat-square)](https://cursor.com/blog/cursor-3)
 [![MiniMax M3](https://img.shields.io/badge/MiniMax-M3-8b5cf6?style=flat-square)](https://platform.minimax.io)
@@ -55,8 +55,8 @@
 ### For Cursor
 
 ```bash
-git clone https://github.com/madebyaris/advance-minimax-m2-cursor-rules.git
-cp -r advance-minimax-m2-cursor-rules/.cursor your-project/.cursor
+git clone https://github.com/madebyaris/advance-minimax-m3-cursor-rules.git
+cp -r advance-minimax-m3-cursor-rules/.cursor your-project/.cursor
 ```
 
 That's it. Two rules are **always on**:
