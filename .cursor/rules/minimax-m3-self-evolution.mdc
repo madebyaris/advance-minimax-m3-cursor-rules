@@ -1,11 +1,11 @@
 ---
-description: "MiniMax M2.7 self-evolution harness: iterative refinement loops, autonomous debugging, and recursive improvement patterns."
+description: "MiniMax M3 self-evolution harness: iterative refinement loops, compress-before-iterate, autonomous debugging, and recursive improvement patterns."
 alwaysApply: false
 ---
 
-# MiniMax M2.7 Self-Evolution Harness
+# MiniMax M3 Self-Evolution Harness
 
-M2.7 has a 97% skill adherence rate and supports autonomous self-improvement through iterative reinforcement learning loops. Use this rule when the task involves debugging, optimization, or recursive code improvement.
+M3 has a 1M-token MSA context and high skill adherence, and supports autonomous self-improvement through iterative reinforcement learning loops. Use this rule when the task involves debugging, optimization, or recursive code improvement.
 
 ## Core Loop
 
@@ -13,13 +13,23 @@ M2.7 has a 97% skill adherence rate and supports autonomous self-improvement thr
 Iterate until evidence shows the problem is solved or the approach is exhausted:
   1. Run the smallest diagnostic check
   2. Read the failure output directly
-  3. Make ONE targeted fix based on evidence
-  4. Re-run the exact check that failed
-  5. If fixed, verify the broader surface
-  6. If not fixed, form new hypothesis from the NEW evidence only
+  3. Compress prior raw evidence that you no longer need (see below)
+  4. Make ONE targeted fix based on evidence
+  5. Re-run the exact check that failed
+  6. If fixed, verify the broader surface
+  7. If not fixed, form a new hypothesis from the NEW evidence only
 ```
 
 Do NOT repeat the same fix twice on the same hypothesis. Do NOT assume the cause without reading the evidence.
+
+## Compress Before Next Iteration (M3)
+
+On M3 the failure mode shifts from "ran out of room" to "ran too many parallel hypotheses without compressing." Before each new iteration:
+
+- Replace raw search/fetch output from previous iterations with a 2–4 line summary.
+- Drop evidence that is no longer relevant to the current hypothesis.
+- Keep one canonical "current best hypothesis" line at the top of your scratchpad.
+- For very large work, use the `minimax-m3-long-context` skill to plan the loader.
 
 ## When to Use This Harness
 
@@ -30,12 +40,14 @@ Do NOT repeat the same fix twice on the same hypothesis. Do NOT assume the cause
 | Fix failing test | Read test → read code → one fix → run test |
 | Investigate unexpected behavior | Log/check → hypothesis → targeted probe |
 | Iterative code improvement | Current state → one improvement → verify |
+| Triage a visual bug from a screenshot | Read the screenshot, form hypothesis, one fix, re-read the post-change frame (`multimodal-grounded`) |
 
 ## Iteration Limits
 
 - **Diagnostic phase**: 3 iterations to identify root cause
 - **Fix phase**: 2 iterations per hypothesis before switching strategy
 - **Overall**: If 5 total iterations pass without progress, summarize evidence and ask
+- **Context check**: if you have run 3+ raw search/fetch operations without compressing, compress before continuing
 
 ## Evidence Rules
 
@@ -44,6 +56,7 @@ Always prefer direct evidence over inference:
 - Test failures: Read the test output
 - Performance: Read the actual measurement
 - Behavior: Read the actual output/log
+- Visual claims: Read the actual attached image/frame, not a memory or guessed description
 
 Never say "likely caused by" without reading the evidence first.
 
@@ -64,3 +77,5 @@ Next action: [specific check to confirm new hypothesis]
 - Do not make multiple changes between diagnostic cycles
 - Do not assume a fix works without re-running the exact check
 - Do not expand scope mid-iteration (finish the loop first)
+- Do not accumulate raw search output across iterations without compressing
+- Do not make a visual-fidelity claim without re-reading the post-change frame

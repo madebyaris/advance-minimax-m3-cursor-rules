@@ -1,11 +1,11 @@
 ---
-description: "Extended verification playbook: proof selection, shell checks, browser checks, and recovery loops."
+description: "Extended M3 verification playbook: proof selection, multimodal-grounded checks, shell checks, browser checks, and recovery loops."
 alwaysApply: false
 ---
 
-# Verification Playbook
+# M3 Verification Playbook
 
-Extends the always-on `minimax-m2-status-verification` contract with check selection, shell/browser guidance, and self-review. The status labels, minimum proof table, and closeout shape live in that always-on rule — do not restate them here.
+Extends the always-on `minimax-m3-status-verification` contract with check selection, shell/browser guidance, multimodal-grounded checks, and self-review. The status labels, minimum proof table, and closeout shape live in that always-on rule — do not restate them here.
 
 ## Proof Selection
 
@@ -13,6 +13,7 @@ Extends the always-on `minimax-m2-status-verification` contract with check selec
 - Prefer the smallest proof that can honestly support the user-facing claim.
 - Strengthen the proof when the claim involves runtime behavior, interaction, styling, navigation, persistence, or integration.
 - If the deliverable promises a styling or toolchain layer (Tailwind, shadcn, routing, persistence), verify that layer directly — do not assume the scaffold wired it correctly.
+- **Visual / design / styling claim → `multimodal-grounded`**: read the attached image/frame, name the file path, name the region inspected, and check the relevant region. Do not infer from prose or from a memory of the pre-change state. See the `minimax-m3-multimodal-input` skill for the full workflow.
 
 ## Shell-Based Checks
 
@@ -34,6 +35,8 @@ Use browser verification when the user would experience the change visually or i
 - styling pipeline issues
 - end-to-end behavior the shell cannot prove
 
+For purely visual claims (a screenshot already exists, or the user attached a mock), `multimodal-grounded` is the cheaper and more direct proof than a browser pass; use the browser pass when the surface is interactive.
+
 When browser verification is unavailable, say that clearly and downgrade the claim instead of implying full proof.
 
 ## Self-Review
@@ -45,6 +48,7 @@ What would break this?
 What assumptions might be wrong?
 Is there a simpler way?
 Did I solve the actual request?
+Did I re-read the post-change visual state, or am I remembering the pre-change state?
 ```
 
 ## When Verification Fails

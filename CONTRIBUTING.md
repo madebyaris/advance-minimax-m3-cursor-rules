@@ -1,6 +1,6 @@
 # Contributing
 
-This repo is intentionally opinionated: keep the always-on core small, keep requestable rules narrow, and keep skills deep only when they cover a repeatable workflow.
+This repo is intentionally opinionated: keep the always-on core small, keep requestable rules narrow, and keep skills deep only when they cover a repeatable workflow. It is now tuned for MiniMax M3 (1M-token MSA context, native multimodal input) and Cursor 3 (Agents Window, `/worktree`, `/best-of-n`, `Await`, MCP Apps structured content).
 
 ## Core Principles
 
@@ -8,7 +8,8 @@ This repo is intentionally opinionated: keep the always-on core small, keep requ
 2. Prefer improving an existing rule or skill over adding a near-duplicate.
 3. Keep durable behavior in always-on rules.
 4. Put domain depth, references, and longer workflows in requestable rules or skills.
-5. Verify rule changes against real agent tasks, not only by reading the prose.
+5. M3-native behavior (long-context strategy, multimodal input) belongs in the always-on core as **short rules** with deeper mechanics pushed to skills.
+6. Verify rule changes against real agent tasks, not only by reading the prose.
 
 ## What Goes Where
 
@@ -20,8 +21,10 @@ Use always-on rules only for durable, high-leverage behavior such as:
 - verification language
 - tool honesty
 - scaffold discipline
+- M3 long-context discipline (one short section in the core)
+- M3 multimodal input discipline (one short section in the core)
 
-Do not add domain-specific checklists or long examples here.
+Do not add domain-specific checklists or long examples here. The core's job is the spine, not the depth.
 
 ### Requestable rules
 
@@ -44,6 +47,8 @@ Prefer:
 - concrete user-language trigger conditions
 
 Avoid omnibus skills that duplicate the core contract.
+
+For very large work, use the `minimax-m3-long-context` skill. For visual-fidelity work, use the `minimax-m3-multimodal-input` skill. Both are first-class skills in this repo, not external dependencies.
 
 ## Skill Structure
 
@@ -72,6 +77,7 @@ metadata:
   category: workflow
   sources:
     - Official docs or standards
+  model_assumptions: []    # optional; see below
 ---
 ```
 
@@ -82,6 +88,10 @@ Rules:
 - `license` should be explicit
 - `metadata.version` should be updated when the workflow materially changes
 - `metadata.sources` should point to current authoritative references when relevant
+- `metadata.model_assumptions` (optional) should name the model capabilities the skill depends on. Examples:
+  - `multimodal-input: required` — the skill expects the user can attach images/video
+  - `long-context: recommended` — the skill expects a 1M-class context window
+  - `cursor-3-runtime: required` — the skill expects the Cursor 3 / Agents Window surface
 
 ## Review Checklist
 
@@ -93,6 +103,7 @@ Before submitting a change, check:
 - Are examples short and behavior-changing, not decorative?
 - For skills: does the opening tell the agent exactly when to load it?
 - For rules: is this durable enough to justify its token cost?
+- For M3-native behavior: is the always-on core still small? If not, push depth into a skill.
 
 ## Documentation Sync
 
@@ -120,3 +131,5 @@ Do not add:
 - brittle tool names or wrappers that are not guaranteed by the runtime
 - giant lists of preferences that are already covered elsewhere
 - generated project metadata such as `.xcodeproj`, `.pbxproj`, or similar hand-written artifacts
+- "AI slop" UI patterns in any design guidance or skill
+- visual-fidelity claims without a `multimodal-grounded` path to back them

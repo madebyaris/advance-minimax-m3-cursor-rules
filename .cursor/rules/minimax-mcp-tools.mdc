@@ -1,5 +1,5 @@
 ---
-description: "MCP and web-tool guidance: current-doc retrieval, direct-tool preference, and version-aware external lookups."
+description: "MCP and web-tool guidance: current-doc retrieval, direct-tool preference, MCP Apps structured content, and version-aware external lookups."
 alwaysApply: false
 ---
 
@@ -14,7 +14,8 @@ When multiple paths exist, prefer:
 1. direct native tools exposed in the prompt
 2. direct plugin or MCP-backed tools exposed in the prompt
 3. MCP resource functions when available
-4. `WebSearch` and `WebFetch`
+4. MCP Apps structured content when returned by a tool
+5. `WebSearch` and `WebFetch`
 
 Do not assume old wrapper APIs are present just because they appear in older docs or rules.
 
@@ -44,6 +45,7 @@ When versions matter:
 - Follow the exact schema of currently exposed tools.
 - If the environment exposes direct tools, use them directly.
 - If the environment exposes resources instead of actions, use the resource discovery and fetch path.
+- If a tool returns MCP Apps structured content, use the structured form rather than the prose form.
 - Keep assumptions about server names and tool IDs out of general rules.
 
 ## Typical Chains
@@ -52,6 +54,7 @@ When versions matter:
 Version check -> install or configure -> verify
 Docs lookup -> implement -> behavior check
 Resource discovery -> targeted fetch -> synthesize
+Visual diff -> grounded report
 ```
 
 For version-sensitive setup guidance, prefer:
@@ -67,3 +70,4 @@ If an MCP or plugin call fails:
 - simplify the arguments
 - remove stale placeholder text
 - fall back to another available source if the integration is optional
+- if the tool returned structured content, check whether the prose view missed a useful field

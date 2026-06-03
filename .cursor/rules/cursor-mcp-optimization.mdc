@@ -1,18 +1,18 @@
 ---
-description: "Cursor MCP optimization: browser, Figma, and Cloudflare tools with direct action patterns."
+description: "Cursor 3 MCP optimization: browser, Figma, and Cloudflare tools, MCP Apps structured content, and direct action patterns."
 alwaysApply: false
 ---
 
-# Cursor MCP Optimization
+# Cursor 3 MCP Optimization
 
-Direct guidance for Cursor's MCP tools. Use the right tool for each job.
+Direct guidance for Cursor 3's MCP tools. Use the right tool for each job.
 
 ## Browser Tools (cursor-ide-browser)
 
 **Always do before any interaction:**
 ```
-1. browser_tabs with action: "list" → check current tabs/URLs
-2. browser_snapshot → get current page structure and refs
+1. browser_tabs with action: "list" -> check current tabs/URLs
+2. browser_snapshot -> get current page structure and refs
 ```
 
 **Interaction pattern:**
@@ -43,14 +43,15 @@ Direct guidance for Cursor's MCP tools. Use the right tool for each job.
 ```
 
 **URL parsing:**
-- `figma.com/design/:fileKey/:fileName?node-id=:nodeId` → convert "-" to ":" in nodeId
-- `figma.com/board/:fileKey/:fileName` → FigJam, use get_figjam
-- `figma.com/make/:makeFileKey/:makeFileName` → use makeFileKey
+- `figma.com/design/:fileKey/:fileName?node-id=:nodeId` -> convert "-" to ":" in nodeId
+- `figma.com/board/:fileKey/:fileName` -> FigJam, use get_figjam
+- `figma.com/make/:makeFileKey/:makeFileName` -> use makeFileKey
 
 **When designer provides screenshots:**
 - Use get_screenshot for visual verification
 - Translate Figma design tokens to project's token system
 - Never copy exact Figma hex values without checking project palette
+- For M3 multimodal parity, the design screenshot is the contract — cite the file path in the report
 
 ## Cloudflare Tools
 
@@ -68,6 +69,15 @@ Direct guidance for Cursor's MCP tools. Use the right tool for each job.
 
 **MCP auth:** If a Cloudflare MCP server has `mcp_auth`, call it before using tools.
 
+## MCP Apps Structured Content (Cursor 3)
+
+Cursor 3 supports **MCP Apps structured content** — tools can now return richer structured outputs (typed objects, lists, tables) instead of prose blobs.
+
+- When a tool returns structured content, **prefer the structured form** over reconstructing from prose.
+- Surface the structured result faithfully in the report — do not paraphrase the shape.
+- A few plugin families (Vercel, Linear, Cloudflare) already return structured outputs of this kind; check the descriptor before assuming a tool returns plain text.
+- If the runtime supports it, render tabular or nested results as a canvas or table, not as a markdown dump.
+
 ## MCP General Rules
 
 ```
@@ -75,16 +85,19 @@ Direct guidance for Cursor's MCP tools. Use the right tool for each job.
 2. Use exact parameter names from the schema
 3. If tool unavailable, say so and use next best exposed path
 4. Do not infer hidden parameters or old API versions
+5. If the tool returns structured content, use the structured form rather than the prose form
 ```
 
 ## Marketplace plugins
 
-Plugins installed from the [Cursor Marketplace](https://cursor.com/marketplace) extend agents with MCPs, skills, and related capabilities. Treat them like any other MCP surface: **inventory** what the session exposes, **read descriptors/schemas** before first use, then call the smallest valid tool—same as in `tool-discovery.mdc`.
+Plugins installed from the [Cursor Marketplace](https://cursor.com/marketplace) extend agents with MCPs, skills, and related capabilities. Treat them like any other MCP surface: **inventory** what the session exposes, **read descriptors/schemas** before first use, then call the smallest valid tool — same as in `tool-discovery.mdc`.
+
+**Rollout caveat (Cursor 3):** third-party plugin imports now **default to off for Enterprises** when unset, while preserving explicit Admin overrides. If you are working in an Enterprise workspace, confirm the plugin import policy with the Admin before relying on a marketplace plugin.
 
 ## Capability Mapping Checklist
 
 Before acting, confirm:
 - [ ] Direct native tool exists for this action
-- [ ] MCP tool exists with current schema
+- [ ] MCP tool exists with current schema (and structured-content support if relevant)
 - [ ] Browser interaction confirmed via snapshot
 - [ ] Fallback path identified if primary fails
