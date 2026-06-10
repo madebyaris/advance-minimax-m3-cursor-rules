@@ -1,28 +1,33 @@
 ---
-description: "MiniMax M3 + Cursor 3 tool discovery: runtime inventory, schema-first MCP use, MCP Apps structured content, capability mapping, and safe fallbacks."
+description: "MiniMax M3 + Cursor 3.7 tool discovery: runtime inventory, canvases, Design Mode inputs, schema-first MCP use, MCP Apps structured content, capability mapping, and safe fallbacks."
 alwaysApply: false
 ---
 
-# Tool Discovery (Cursor 3 + M3)
+# Tool Discovery (Cursor 3.7 + M3)
 
-Use this rule when the runtime surface is unfamiliar, tool-heavy, or likely to differ across environments.
+Current through **Cursor 3.7** (Jun 2026). Use this rule when the runtime surface is unfamiliar, tool-heavy, or likely to differ across environments.
 
 ## Discovery Order
 
 Inventory the current surface in this order:
 
-1. direct tools exposed in the prompt
-2. browser or IDE-native tools exposed in the prompt
+1. direct tools exposed in the prompt (`Read`, `Grep`, `Task`, `Await`, etc. — names vary by surface; the live list wins)
+2. browser, canvas, and other IDE-native surfaces exposed in the prompt
+   - **Browser MCP** (`cursor-ide-browser`): snapshot-first automation; read the server's tool descriptors
+   - **Canvas** (`.canvas.tsx`): confirm the session supports canvases before promising one; load the `canvas` skill before authoring
+   - **Design Mode** (3.7): user-driven in browser or canvas — not an agent tool; when the user has selected or annotated elements, treat that as the primary input for UI edits
 3. **Cursor Marketplace** (or team marketplace) plugins already installed — same schema-first rules as other MCPs; discover tools and resources from each plugin's descriptors before calling
-4. MCP tools and resources with their current schemas (including project-configured servers)
+4. MCP tools and resources with their current schemas (including project-configured servers under the session's MCP descriptor path)
 5. web docs only when discovery or versions still remain unclear
+
+For delegation, read the live `Task` schema for available `subagent_type` values and whether nesting or `run_in_background` applies (Multitask Mode expects background runs).
 
 ## Schema-First Use
 
 - Read the current schema or descriptor before calling unfamiliar MCP tools.
 - Match the task step to the smallest tool that can honestly do it.
 - Do not infer hidden parameters or old wrapper names from memory.
-- **MCP Apps structured content (Cursor 3)**: when a tool returns structured content, prefer the structured form over reconstructing from prose. Surface it in the report faithfully.
+- **MCP Apps structured content**: when a tool returns structured content, prefer the structured form over reconstructing from prose. When the structured data *is* the deliverable, route it to a **canvas** rather than a markdown table in chat.
 
 ## Capability Mapping
 
@@ -33,7 +38,9 @@ Before acting, translate the task into:
 - what must be verified
 - which currently exposed tool best serves each step
 
-For visual-fidelity work, also translate into: which image/frame must be read, and which post-change frame must be re-read after editing.
+For visual-fidelity work, also translate into: which image/frame must be read, which **Design Mode** selections the user provided (if any), and which post-change frame must be re-read after editing.
+
+For analytical or tabular deliverables, also translate into: whether a **canvas** is the right surface (audit, metrics breakdown, MCP query results) vs. inline chat prose.
 
 ## Discovery Loop
 
@@ -58,4 +65,5 @@ For visual-fidelity work, also translate into: which image/frame must be read, a
 - using shell as the first choice when a direct tool is exposed
 - calling MCP tools without reading current schemas
 - hiding tool uncertainty behind confident prose
-- ignoring MCP Apps structured content and dumping it as prose
+- ignoring MCP Apps structured content and dumping it as prose or markdown tables when a canvas is available
+- promising canvas, Design Mode, browser, or nested `Task` behavior before confirming the current session exposes it

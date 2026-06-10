@@ -60,6 +60,22 @@ Layering (presentation → domain → data) applies; see `language-agnostic-patt
 
 ---
 
+## Mobile Design Quality
+
+Web design instincts do not transfer 1:1 to mobile. The judgment calls:
+
+- **Platform type defaults are correct here.** SF Pro on iOS and Roboto on Android are the *native* choice, not slop — the web font bans in `anti-slop-design` apply to display/brand moments, not to app body text. Custom fonts earn their place on headings and brand surfaces only.
+- **Design for the thumb, not the cursor.** Primary actions in the bottom half of the screen; destructive actions away from habitual tap zones; nothing important hidden behind hover (there is none).
+- **Navigation follows platform grammar.** Bottom tabs for 3–5 top-level destinations; respect the Android back gesture and iOS swipe-back; use native share sheets, switches, and pickers instead of web-style rebuilds.
+- **Glanceability over density.** One primary piece of information per screen region; web dashboard density fails at arm's length on a 6-inch display.
+- **Loading is layout-shaped.** Skeletons that match the final layout; render cached/partial data immediately rather than blocking the screen on the full payload.
+- **Lists must be virtualized.** `FlatList` / `ListView.builder` with stable keys — never map an unbounded array into scroll children (also listed in traps; it is the #1 mobile perf bug).
+- **Motion at 60fps.** RN: `useNativeDriver` / Reanimated on the UI thread. Flutter: animate with `AnimatedBuilder`/implicit animations, not `setState` rebuilds of whole subtrees.
+
+For visual direction (palette, tone, category), still load `anti-slop-design` — adapted through the platform conventions above.
+
+---
+
 ## Platform Integration
 
 - Request permissions at point of use with clear rationale; handle denied/permanent-deny flows.

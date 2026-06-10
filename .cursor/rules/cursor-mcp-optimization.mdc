@@ -1,11 +1,11 @@
 ---
-description: "Cursor 3 MCP optimization: browser, Figma, and Cloudflare tools, MCP Apps structured content, and direct action patterns."
+description: "Cursor 3.7 MCP optimization: browser Design Mode, canvases, Figma, Cloudflare tools, MCP Apps structured content, and direct action patterns."
 alwaysApply: false
 ---
 
-# Cursor 3 MCP Optimization
+# Cursor 3.7 MCP Optimization
 
-Direct guidance for Cursor 3's MCP tools. Use the right tool for each job.
+Current through **Cursor 3.7** (Jun 2026). Direct guidance for Cursor's MCP and integrated surfaces. Use the right tool for each job.
 
 ## Browser Tools (cursor-ide-browser)
 
@@ -32,6 +32,28 @@ Direct guidance for Cursor 3's MCP tools. Use the right tool for each job.
 - Click without a fresh snapshot first
 - Reuse old screenshot coordinates
 - Assume page state without verification
+
+## Browser Design Mode (Cursor 3.7)
+
+Design Mode is a **user-driven** overlay in the integrated browser — agents do not invoke it as a tool. When the user selects elements there, treat those selections as ground truth for UI edits (same discipline as `multimodal-grounded`):
+
+- **Multi-select:** two or more elements selected together carry code, layout, and visual relationships — use them for parity edits, deduplication, or batch component tweaks.
+- **Voice input:** transcribed voice instructions are user intent; honor them even if the agent is mid-run.
+- **Agent path unchanged:** still snapshot → ref-based interaction for automation; Design Mode complements, not replaces, the MCP browser flow.
+
+## Canvas (Cursor 3.7)
+
+Canvases are live React artifacts beside the chat — dashboards, reports, analyses, internal tools. Load the `canvas` skill before creating or editing `.canvas.tsx` files.
+
+**When to use a canvas:**
+- Structured MCP or tabular deliverables where the data *is* the output (prefer canvas over markdown tables)
+- Interactive reports the user may share or iterate on (context usage breakdowns, audits, timelines)
+
+**3.7 canvas features:**
+- **Design Mode in canvases** — user can select and annotate UI elements directly; treat annotations like browser Design Mode selections.
+- **Context usage report** — interactive token breakdown (prompt, tools, rules, skills); useful for compression decisions on M3 long-context work.
+- **Embedded prompt buttons** — canvases can run follow-up prompts; keep button text bounded and explicit.
+- **Full-screen share** — shared canvases open in the browser for presentation; not a substitute for app UI verification.
 
 ## Figma Tools (plugin-figma-figma)
 
@@ -69,9 +91,9 @@ Direct guidance for Cursor 3's MCP tools. Use the right tool for each job.
 
 **MCP auth:** If a Cloudflare MCP server has `mcp_auth`, call it before using tools.
 
-## MCP Apps Structured Content (Cursor 3)
+## MCP Apps Structured Content
 
-Cursor 3 supports **MCP Apps structured content** — tools can now return richer structured outputs (typed objects, lists, tables) instead of prose blobs.
+Since Cursor 3, **MCP Apps structured content** lets tools return richer structured outputs (typed objects, lists, tables) instead of prose blobs.
 
 - When a tool returns structured content, **prefer the structured form** over reconstructing from prose.
 - Surface the structured result faithfully in the report — do not paraphrase the shape.
@@ -92,7 +114,7 @@ Cursor 3 supports **MCP Apps structured content** — tools can now return riche
 
 Plugins installed from the [Cursor Marketplace](https://cursor.com/marketplace) extend agents with MCPs, skills, and related capabilities. Treat them like any other MCP surface: **inventory** what the session exposes, **read descriptors/schemas** before first use, then call the smallest valid tool — same as in `tool-discovery.mdc`.
 
-**Rollout caveat (Cursor 3):** third-party plugin imports now **default to off for Enterprises** when unset, while preserving explicit Admin overrides. If you are working in an Enterprise workspace, confirm the plugin import policy with the Admin before relying on a marketplace plugin.
+**Rollout caveat (Cursor 3.7):** third-party plugin imports now **default to off for Enterprises** when unset, while preserving explicit Admin overrides. If you are working in an Enterprise workspace, confirm the plugin import policy with the Admin before relying on a marketplace plugin.
 
 ## Capability Mapping Checklist
 

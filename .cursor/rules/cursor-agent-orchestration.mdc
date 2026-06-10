@@ -1,11 +1,11 @@
 ---
-description: "Cursor 3 orchestration guide: when to plan, when to delegate, multi-environment handoffs, /best-of-n, and Await for long-running branches."
+description: "Cursor 3.7 orchestration guide: when to plan, when to delegate, nested subagents, multi-environment handoffs, /best-of-n, and Await for long-running branches."
 alwaysApply: false
 ---
 
-# Cursor 3 Agent Orchestration
+# Cursor 3.7 Agent Orchestration
 
-Use this rule for deep or exhaustive tasks where coordination matters more than raw implementation speed.
+Current through **Cursor 3.7** (Jun 2026). Use this rule for deep or exhaustive tasks where coordination matters more than raw implementation speed.
 
 ## Core Idea
 
@@ -13,7 +13,7 @@ The main agent should own synthesis. Plans, subagents, and task tracking exist t
 
 ## Local, worktree, cloud, and SSH sessions
 
-Cursor 3 emphasizes moving work between execution environments inside the Agents Window. Treat this as workflow guidance, not a requirement:
+Cursor 3.7 emphasizes moving work between execution environments inside the Agents Window. Treat this as workflow guidance, not a requirement:
 
 - Prefer **local** when you need fast edit–run–debug loops, full filesystem access, or machine-specific verification.
 - Prefer **/worktree** (isolated git worktree) when the task must not collide with the main tree, when you are running parallel branches, or when you want a disposable environment.
@@ -24,7 +24,7 @@ Handoffs should still use explicit goals, owned paths, environment, model, and w
 
 ## Parallel sessions and the sidebar
 
-Cursor 3 can show **many agent sessions** at once (including from other surfaces — mobile, web, Slack, GitHub, Linear). That mirrors the idea of concurrent **`Task`** / subagent delegation: only parallelize **independent** slices, merge results in one synthesis step, and avoid two sessions racing the same files. The UI makes parallelism easier; it does not remove the need for clear ownership, non-overlapping paths, and one synthesis step.
+Cursor 3.7 can show **many agent sessions** at once (including from other surfaces — mobile, web, Slack, GitHub, Linear). That mirrors the idea of concurrent **`Task`** / subagent delegation: only parallelize **independent** slices, merge results in one synthesis step, and avoid two sessions racing the same files. The UI makes parallelism easier; it does not remove the need for clear ownership, non-overlapping paths, and one synthesis step.
 
 ## When to Plan
 
@@ -49,6 +49,10 @@ Avoid delegation overhead for instant or light work.
 
 When several independent branches exist, do not launch them serially by habit. Launch multiple `Task` calls together with separate scopes and merge their results in the main thread.
 
+**Nested subagents (3.7):** a subagent can spawn its own `Task` children. Treat nesting as a depth budget, not a default — prefer one delegation layer; use two only when the child slice is still too broad. The main thread still owns synthesis, edits, and final verification; do not let nested branches drift into parallel implementation on the same files.
+
+**Multitask Mode:** when the session is in Multitask Mode, background subagent runs are expected — set `run_in_background: true` on `Task` and `Await` the result instead of blocking the main thread.
+
 ## /best-of-n as an Orchestration Primitive
 
 For high-stakes decisions (architecture, refactor approach, design parity), the `/best-of-n` command runs the same prompt across 2–4 models in parallel worktrees and then compares outcomes.
@@ -56,7 +60,7 @@ For high-stakes decisions (architecture, refactor approach, design parity), the 
 A small workflow for using it well:
 
 ```text
-1. Pick 2-4 models (mix is fine: composer-2 + MiniMax-M3 + a third)
+1. Pick 2-4 models (mix is fine: `composer-2.5` + MiniMax-M3 + a third)
 2. Write one bounded prompt that names the question, the constraint, and the deliverable shape
 3. Run /best-of-n in isolated worktrees
 4. Read each result centrally; tag them with the model
@@ -123,7 +127,7 @@ Verify
 Broaden carefully
 ```
 
-For exhaustive work, break the task into independently verifiable milestones rather than broad abstract epics. On M3, also load `minimax-m3-long-context` once the milestones cross ~200K tokens of input.
+For exhaustive work, break the task into independently verifiable milestones rather than broad abstract epics. On M3, also load `minimax-m3-long-context` once the milestones cross ~200K tokens of input. Cursor 3.7 can surface a **context usage report** canvas — use it when token pressure is the blocker, then compress or drop slices before expanding scope.
 
 ## Verification During Orchestration
 

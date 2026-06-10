@@ -1,9 +1,9 @@
 ---
-description: "MiniMax M3 + Cursor 3 agent teams: role boundaries, multi-environment handoffs, /best-of-n as a team pattern, escalation, and serial vs parallel team structure."
+description: "MiniMax M3 + Cursor 3.7 agent teams: role boundaries, multi-environment handoffs, /best-of-n as a team pattern, escalation, and serial vs parallel team structure."
 alwaysApply: false
 ---
 
-# Agent Teams (M3 + Cursor 3)
+# Agent Teams (M3 + Cursor 3.7)
 
 Use this rule when the work is best handled by multiple agents or explicitly separated roles.
 
@@ -15,7 +15,7 @@ Use this rule when the work is best handled by multiple agents or explicitly sep
 
 ## Multiple concurrent Cursor sessions
 
-Cursor 3 can run **several agent sessions in parallel** (for example from the Agents Window sidebar, or kicked off from mobile, web, Slack, GitHub, Linear). The same rules apply as for parallel roles or subagent branches: use parallel sessions only for **independent** workstreams, keep **non-overlapping ownership** of files and decisions, and **serialize** anything that would race the same artifact. More sessions visible at once does not make conflicting edits safer.
+Cursor 3.7 can run **several agent sessions in parallel** (for example from the Agents Window sidebar, or kicked off from mobile, web, Slack, GitHub, Linear). The same rules apply as for parallel roles or subagent branches: use parallel sessions only for **independent** workstreams, keep **non-overlapping ownership** of files and decisions, and **serialize** anything that would race the same artifact. More sessions visible at once does not make conflicting edits safer.
 
 ## Multi-Environment Teams
 
@@ -32,7 +32,7 @@ Every handoff should state:
 
 - current goal
 - **which repo or workspace root** when more than one is in play
-- **environment** (local / worktree / cloud / SSH) and **model** (e.g. `MiniMax-M3`, `composer-2`, `auto`)
+- **environment** (local / worktree / cloud / SSH) and **model** (e.g. `MiniMax-M3`, `composer-2.5`, `auto`)
 - files, dirs, or questions owned
 - findings or artifacts produced
 - open risks or assumptions

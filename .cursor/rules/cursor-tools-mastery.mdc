@@ -1,20 +1,21 @@
 ---
-description: "Cursor 3 runtime guide: choose the right tool, prefer direct tools, use /worktree, /best-of-n, and Await where they fit, and keep execution parallel where safe."
+description: "Cursor 3.7 runtime guide: choose the right tool, canvases, Design Mode, /worktree, /best-of-n, Await, and parallel execution where safe."
 alwaysApply: false
 ---
 
-# Cursor 3 Tools Mastery
+# Cursor 3.7 Tools Mastery
 
-Keep durable behavior in the core rule. Use this file for current Cursor 3 tool-selection patterns and the Agents Window surface.
+Keep durable behavior in the core rule. Use this file for current Cursor **3.7** tool-selection patterns and the Agents Window surface.
 
-## Cursor 3 workspace
+## Cursor 3.7 workspace
 
-In Cursor 3, agent work is centered in the **Agents Window**. Open it from the command palette: `Cmd+Shift+P -> Agents Window` on macOS (per the [Cursor 3 announcement](https://cursor.com/blog/cursor-3)). The classic three-pane editor is still available; switch between them at any time.
+In Cursor 3.7, agent work is centered in the **Agents Window**. Open it from the command palette: `Cmd+Shift+P -> Agents Window` on macOS (per the [Cursor 3 announcement](https://cursor.com/blog/cursor-3); 3.7 changelog at [cursor.com/changelog](https://cursor.com/changelog)). The classic three-pane editor is still available; switch between them at any time.
 
 - **Multi-workspace / multi-repo:** the Agents Window can surface several workspaces at once. Name the repo or root path when handing off work, opening files, or running commands so edits land in the intended tree.
 - **Per-session execution environment:** each agent tab picks its own environment — local working tree, isolated worktree (`/worktree`), cloud sandbox, or remote SSH. State the environment in the handoff contract; it is the unit of isolation.
-- **Per-session model picker:** the model picker lives in the agent tab header (e.g. `composer-2`, `MiniMax-M3`, `auto`). Name the model in the handoff contract.
-- **Integrated browser:** prefer the IDE's built-in browser for local UI verification when it is exposed in your session; it matches the "snapshot-first" flow in Browser Guidance below.
+- **Per-session model picker:** the model picker lives in the agent tab header (e.g. `composer-2.5`, `MiniMax-M3`, `auto`). Name the model in the handoff contract.
+- **Integrated browser:** prefer the IDE's built-in browser for local UI verification when it is exposed in your session; it matches the "snapshot-first" flow in Browser Guidance below. Cursor 3.7 adds **Design Mode** (multi-select elements, voice input) — user selections there are ground truth for UI edits.
+- **Canvases:** live React artifacts beside the chat for dashboards, reports, and structured analyses; load the `canvas` skill before `.canvas.tsx` work.
 
 ## Golden Rule
 
@@ -29,7 +30,7 @@ Validate with the lightest useful verification
 
 ## Default Tool Map
 
-**Cursor 3 / Composer-style agents (typical names in current desktop agents)** — the session usually exposes something close to:
+**Cursor 3.7 / Composer-style agents (typical names in current desktop agents)** — the session usually exposes something close to:
 
 | Step | Tool / command | Notes |
 |------|----------------|-------|
@@ -54,14 +55,16 @@ Validate with the lightest useful verification
 | Notebooks | `EditNotebook` | `.ipynb` cell edits |
 | Lint diagnostics | `ReadLints` | After substantive edits when available |
 | Multimodal inputs | `Read` against attached image/video paths | M3 native multimodal — treat as first-class inputs |
+| Interactive artifact | Canvas (`.canvas.tsx`) | Dashboards, reports, MCP tabular output — load `canvas` skill first |
+| Context diagnostics | Context usage report canvas | 3.7 — token breakdown across prompt, tools, rules, skills |
 
-**Browser:** often MCP tools (for example `cursor-ide-browser`) with names like `browser_snapshot`, `browser_navigate` — follow the server's schema.
+**Browser:** often MCP tools (for example `cursor-ide-browser`) with names like `browser_snapshot`, `browser_navigate` — follow the server's schema. **Design Mode** (3.7) is user-driven; honor multi-select and voice instructions as visual ground truth.
 
 **Parallel batching:** issue **multiple independent tool calls in one assistant turn** when the runtime allows it.
 
 **Other Cursor surfaces** (CLI, older builds, API): names may differ (`ReadFile`, `ApplyPatch`, `Subagent`, etc.). The **exact tool list in the current session always wins** — same principle as `model-compatibility.mdc`.
 
-## Pick The Right Surface (Cursor 3)
+## Pick The Right Surface (Cursor 3.7)
 
 | Need | Best fit |
 |------|----------|
@@ -71,6 +74,8 @@ Validate with the lightest useful verification
 | High-stakes decision (design, architecture, refactor) where you want a second opinion | `/best-of-n` (run across 2–4 models, then pick or merge) |
 | Long-running shell, subagent, or CLI that takes seconds-to-minutes | `Await` on the background job, or a specific output token |
 | Work that should keep running while you walk away | Cloud session, then hand back to local when environment-specific proof is needed |
+| Standalone analytical deliverable (audit, metrics table, MCP data dump) | Canvas — not a markdown table in chat |
+| Context pressure on a long M3 run | Context usage report canvas (3.7), then compress per `minimax-m3-long-context` |
 
 ## Read and Search Guidance
 
@@ -112,13 +117,14 @@ When browser tools exist (including Cursor's integrated browser in supported bui
 ```
 
 Use browser checks for layout-sensitive UI work, interaction bugs, and issues shell commands cannot prove.
-Do not promise a browser-only or canvas-style deliverable until you have confirmed the browser path in the current runtime.
+When the user selects elements in **Design Mode**, treat those selections like attached screenshots — cite what was selected and what you changed.
+Do not promise a browser-only or canvas deliverable until you have confirmed that path in the current runtime.
 
 ## MCP and Plugin Guidance
 
 - Prefer direct tools exposed in the prompt over wrapper APIs.
 - If an MCP server exposes resources instead of action tools, use the resource functions the environment provides.
-- **MCP Apps structured content** (new in Cursor 3): when a tool returns structured content, prefer the structured form over prose dumping; surface it in the report faithfully.
+- **MCP Apps structured content**: when a tool returns structured content, prefer the structured form over prose dumping; render rich tabular output in a **canvas** when the data is the deliverable.
 - Keep repo guidance generic enough to survive tool and server renames.
 
 ## Task and subagent guidance
@@ -131,7 +137,7 @@ When multiple delegations are truly independent:
 - keep one synthesis step in the main thread after they return
 - avoid overlap that makes two agents inspect the same surface without a reason
 
-For long-running delegations, `Await` the subagent result instead of polling.
+For long-running delegations, `Await` the subagent result instead of polling. In **Multitask Mode**, run `Task` in the background (`run_in_background: true`) and `Await` completion. Subagents can nest further `Task` calls (3.7) — keep depth shallow; the main thread still owns synthesis and edits.
 
 Good parallel split examples:
 - frontend investigation vs backend investigation

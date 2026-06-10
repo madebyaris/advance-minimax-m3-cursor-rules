@@ -14,6 +14,15 @@ Extends the always-on `minimax-m3-status-verification` contract with check selec
 - Strengthen the proof when the claim involves runtime behavior, interaction, styling, navigation, persistence, or integration.
 - If the deliverable promises a styling or toolchain layer (Tailwind, shadcn, routing, persistence), verify that layer directly — do not assume the scaffold wired it correctly.
 - **Visual / design / styling claim → `multimodal-grounded`**: read the attached image/frame, name the file path, name the region inspected, and check the relevant region. Do not infer from prose or from a memory of the pre-change state. See the `minimax-m3-multimodal-input` skill for the full workflow.
+- **Bug fix → red → green**: reproduce the failure with an exact check *before* fixing, then re-run that same check after. A check that was never red proves the wrong thing.
+
+## Test Integrity During Verification
+
+A passing check only counts as proof if the check itself was not bent:
+
+- Never delete, skip, loosen, widen tolerances on, or special-case a test to reach green. If the test looks wrong, present the evidence to the user — changing the spec is their call.
+- A new test must be able to fail: confirm it fails against the pre-fix code (or would, by construction) before counting it as proof.
+- Hardcoding the expected output into production code, or branching on test-only inputs, is claim-gaming — treat the work as `blocked`, not `verified`.
 
 ## Shell-Based Checks
 

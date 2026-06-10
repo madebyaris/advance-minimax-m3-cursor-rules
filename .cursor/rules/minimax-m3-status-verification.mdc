@@ -34,6 +34,7 @@ Do not use `done`, `fixed`, `working`, or `resolved` without naming the proof im
 | Change type | Minimum proof |
 |-------------|---------------|
 | Localized edit | Re-read or one targeted static check |
+| Bug fix | Red → green: the reproduction fails before the change and passes after; green → green proves nothing |
 | Backend, logic, or API change | Targeted test, command, script, or runtime request |
 | UI or interaction change | Browser or user-surface verification, plus static checks as needed |
 | Integration-sensitive change | Build or typecheck plus one focused behavior check |

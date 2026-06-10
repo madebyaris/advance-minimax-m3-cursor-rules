@@ -1,6 +1,6 @@
 # Contributing
 
-This repo is intentionally opinionated: keep the always-on core small, keep requestable rules narrow, and keep skills deep only when they cover a repeatable workflow. It is now tuned for MiniMax M3 (1M-token MSA context, native multimodal input) and Cursor 3 (Agents Window, `/worktree`, `/best-of-n`, `Await`, MCP Apps structured content).
+This repo is intentionally opinionated: keep the always-on core small, keep requestable rules narrow, and keep skills deep only when they cover a repeatable workflow. It is now tuned for MiniMax M3 (1M-token MSA context, native multimodal input) and Cursor 3.7 (Agents Window, canvases, Design Mode, `/worktree`, `/best-of-n`, `Await`, MCP Apps structured content).
 
 ## Core Principles
 
@@ -91,7 +91,7 @@ Rules:
 - `metadata.model_assumptions` (optional) should name the model capabilities the skill depends on. Examples:
   - `multimodal-input: required` — the skill expects the user can attach images/video
   - `long-context: recommended` — the skill expects a 1M-class context window
-  - `cursor-3-runtime: required` — the skill expects the Cursor 3 / Agents Window surface
+  - `cursor-3-runtime: required` — the skill expects the Cursor 3.7 / Agents Window surface
 
 ## Review Checklist
 
