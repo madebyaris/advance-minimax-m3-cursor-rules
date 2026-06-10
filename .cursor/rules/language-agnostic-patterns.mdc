@@ -7,7 +7,19 @@ alwaysApply: false
 
 Universal principles for structure, naming, architecture, and testing — applicable across all languages.
 
-Load this rule when refactoring modules, designing abstractions, reviewing architecture, or choosing patterns. For day-to-day coding workflow (read-before-edit, CI discovery, minimal diff, verification), the always-on core **Code Discipline** section is canonical — do not duplicate it here.
+Load this rule when refactoring modules, designing abstractions, reviewing architecture, or choosing patterns. For day-to-day coding workflow (read-before-edit, CI discovery, minimal diff, verification), the always-on core **Code Discipline** section is canonical — do not duplicate it here. For the judgment layer — root-cause method, simplicity taste, test integrity — load `fable5-coding-craft` alongside this rule.
+
+---
+
+## Pattern Judgment (Read First)
+
+Everything below is vocabulary, not a checklist. Frontier-quality code applies patterns *reactively* — when the code's actual pain demands them — never proactively because a situation pattern-matches a textbook example.
+
+- Every pattern has a cost: indirection, a new concept for readers, more files to trace through. Apply one only when the pain it removes is already present, not predicted.
+- The strongest signal for an abstraction is the **third occurrence** of real duplication with identical reasons to change. Two similar blocks that change for different reasons are not duplication — unifying them couples things that must stay free.
+- SOLID violations matter when they cause observed friction (a class you cannot test, a switch you keep re-editing). A small concrete class that "violates SRP" but has never needed to change is fine code — leave it alone.
+- The best architecture for most changes is the one the repo already has. Pattern fluency is mostly for *reading* existing designs and for naming the structure a refactor is already growing toward.
+- When reviewing, flag pattern *overuse* with the same severity as pattern absence: a Strategy with one strategy, a Factory with one product, or an interface with one implementation is indirection without payoff.
 
 ---
 

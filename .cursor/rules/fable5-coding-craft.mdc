@@ -1,0 +1,129 @@
+---
+description: "Fable 5 coding craft: locate-before-write, root-cause method, simplicity taste, error-handling philosophy, test integrity, refactoring discipline, and counters to common LLM coding failure modes. Load when writing, refactoring, debugging, or reviewing non-trivial code in any language."
+alwaysApply: false
+---
+
+# Fable 5 Coding Craft
+
+Distilled from how frontier coding agents earn SWE-Bench-class scores. The score does not come from knowing more syntax — it comes from judgment: finding the right place to change, changing as little as possible, and proving the change at the surface that matters. This rule transfers that judgment to any model.
+
+The always-on core **Code Discipline** section is canonical for workflow (read-before-edit, CI discovery, minimal diff, verification). This rule goes deeper on the judgment calls inside that workflow.
+
+## The Craft Hierarchy
+
+When choices conflict, optimize in this order:
+
+1. **Correct** — does what the user actually needs, including edge cases the repo already cares about
+2. **Clear** — a maintainer who has never seen this diff understands it in one read
+3. **Consistent** — matches this repo's naming, layering, error style, and test style
+4. **Small** — smallest honest diff; no opportunistic changes
+5. **Fast / clever** — only after the above, and only with a measurement justifying it
+
+Never trade a level up for a level down. Clever-but-unclear is a defect, not a style.
+
+## Locate Before You Write
+
+The highest-leverage minutes in any coding task are spent finding *where* the change belongs, not writing it. Most weak fixes are correct code in the wrong place.
+
+1. Start from the strongest signal: a failing test, a stack trace, an error string you can grep, or the user-visible symptom.
+2. Trace from symptom to mechanism: which function produced this output? Which caller decided to call it with these inputs? Where does the data originate?
+3. Read the neighbors before editing: the callers, the tests, and at least one sibling implementation of the same pattern. They tell you the contract you must not break and the conventions you must follow.
+4. Identify the owner of the behavior: the one place that is *responsible* for the decision you need to change. A fix at the owner is 5 lines; a fix at every symptom site is 50 and rots.
+5. Only then write. If you cannot name why the change belongs in this file rather than its caller or callee, you have not finished locating.
+
+## The Root-Cause Method
+
+Every bug is a broken invariant: something that was supposed to be guaranteed, wasn't. Patching the symptom leaves the guarantee broken for the next caller.
+
+Work the chain:
+
+```text
+Symptom      → what the user / test observed
+Mechanism    → the exact code path that produced the symptom
+Invariant    → what guarantee was supposed to make this impossible
+Breach       → where and why that guarantee failed
+Fix          → restore the guarantee at the point it is owned
+```
+
+Ask: "What was supposed to make this state unreachable, and why didn't it?" If the answer is "nothing ever guaranteed it," the fix is to *create* the guarantee at the boundary that owns the data — not to add a defensive check at every consumer.
+
+Acceptable reasons to fix a symptom instead: an emergency mitigation, or the root cause is out of scope. In both cases, say so explicitly and name the real cause.
+
+## Simplicity Taste
+
+The most common quality failure in model-written code is not incorrectness — it is unrequested complexity. Counters:
+
+| Impulse | Replace with |
+|---|---|
+| Defensive null/undefined checks on internal calls | Validate once at the boundary that owns the data; trust internal invariants |
+| try/catch around code that cannot throw meaningfully | Let programmer errors fail loudly; catch only where you have a recovery strategy |
+| Config options, parameters, or flags "for flexibility" | Hardcode the single current behavior; add the option when a second caller needs it |
+| Abstraction on first duplication | Wait for the third occurrence; duplication is cheaper than the wrong abstraction |
+| Wrapper/helper/manager class for one call site | Inline it; a function used once is usually a sentence, not a chapter |
+| Fallback values masking failed operations (`or defaultValue` on an error path) | Propagate the failure; a silent wrong answer is worse than a loud error |
+| Backwards-compatibility shims for code you can just change | Change the code and its callers in the same diff |
+| Rewriting a module to fix one function | Fix the function |
+
+Deleting code is a contribution. If the correct fix removes lines, remove them — do not preserve dead branches "just in case."
+
+## Error-Handling Philosophy
+
+- Errors are part of the data flow, not an afterthought. Decide for each failure: propagate, recover with a real strategy, or crash loudly. "Log and continue" is a decision too — it means the operation is genuinely optional. Be honest about which one applies.
+- Programmer errors (violated invariants, impossible states) should fail fast and loud. User and environment errors (bad input, network down, file missing) get handled paths with actionable messages.
+- An error message must let the reader act: what was being attempted, with what key values, and what to check first.
+- Never introduce a new swallowed error (`catch {}`, `_, _ =`, ignored promise, unchecked return) — and do not copy an existing swallow into new code just because the repo has one.
+
+## Naming And Structure
+
+- A name is compression: it should let the reader skip reading the body. If you cannot name a function honestly in 2–4 words, it is doing more than one thing — split it before naming it dishonestly (`processData`, `handleStuff`, `doWork`).
+- Booleans read as predicates (`isExpired`, `hasAccess`, `shouldRetry`). Functions read as verb phrases that state their full effect — `saveAndNotify`, not `save` that secretly notifies.
+- Structure code in the order a reader needs it: the happy path prominent, guard clauses early, helpers below their callers.
+- Match the repo's vocabulary. If the codebase says `fetch`/`repository`/`handler`, do not introduce `get`/`store`/`controller` for the same concepts.
+
+## Test Integrity
+
+Tests are the executable spec. Treat them with the same honesty rules as user data:
+
+- **Bug fix → reproduce first.** Write or run a check that fails for the reported reason *before* fixing. Red → green is the proof that you fixed the right thing; green → green proves nothing.
+- **Never game a test.** No deleting, skipping, loosening assertions, widening tolerances, hardcoding expected outputs, or special-casing the test's inputs in production code. If the test appears wrong, make the case to the user with evidence — changing the spec is their call.
+- **Test behavior, not implementation.** Assert on outputs and observable effects, so refactors do not shatter the suite.
+- **A new test must be able to fail.** A test that passes against the broken code is decoration. When practical, confirm the failure mode (mentally or by reverting the fix).
+- Match the repo's test style — fixtures, naming, assertion library — rather than importing a foreign idiom.
+
+## Refactoring Discipline
+
+- Behavior-preserving means provably so: green checks before, one mechanical transform at a time, green checks after each.
+- Never mix a refactor with a behavior change in one step; the diff becomes unreviewable and the bisect trail dies.
+- Refactor toward an actual need in this task, not toward an imagined future architecture.
+- For module splits, parameter cleanups, and incremental type migrations, plan seams first: find the narrow waist where the code naturally separates.
+
+## LLM Failure Modes And Counters
+
+Know your own failure distribution and counter it deliberately:
+
+| Failure mode | Counter |
+|---|---|
+| Hallucinated API, flag, or config key | Read the installed source, type definitions, or current docs before using any symbol you have not seen in this session |
+| Plausible code in the wrong file | Finish the Locate step; name why this file owns the change |
+| Stub-and-claim (mock data, TODO, hardcoded return presented as done) | Declare every stub in the closeout; status is `unverified` until real behavior is proven |
+| Narrating comments (`// increment counter`) | Comment only why, never what; most diffs need zero new comments |
+| Scope-creep refactor while fixing a bug | One concern per change set; note the cleanup idea in the closeout instead |
+| Weakening a test to get to green | Forbidden — see Test Integrity |
+| Re-implementing an existing helper | Search for the verb you are about to write (`format`, `parse`, `retry`, `validate`) before writing it |
+| Confidently editing from memory of a file | Re-read the file in the current session before every edit |
+| Apologizing-and-rewriting an entire file after a small failure | Diagnose the actual failure; the smallest corrective edit, not a rewrite |
+| Inventing package versions | Resolve versions from the lockfile, registry, or current docs — never from memory |
+
+## Pre-Closeout Self-Review
+
+Before claiming completion, one pass:
+
+```text
+Did I solve the request the user meant, not just the words?
+Would this diff survive review by the repo's pickiest maintainer?
+What is the most likely way this change breaks something — did I check it?
+Is anything stubbed, assumed, or unverified that the closeout must declare?
+Could this diff be smaller without losing the fix?
+```
+
+Status language and proof requirements live in the always-on `minimax-m3-status-verification` contract; follow it in the closeout.

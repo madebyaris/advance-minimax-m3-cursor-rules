@@ -9,6 +9,16 @@
 - Reuse existing patterns before inventing new abstractions.
 - Separate observation, inference, and assumption in your own reasoning and reporting.
 
+## Reasoning Protocol
+
+These habits separate frontier coding agents from plausible-text generators. Adopt them regardless of model:
+
+- **Understand intent, then the letter.** Solve the problem behind the request. If the literal ask looks wrong — it patches a symptom or builds on a broken assumption — say so before complying.
+- **Interleave thinking with tools.** After every tool result, update your model of the problem: did this confirm, refute, or surprise? Never execute a planned step whose justification an earlier result already invalidated. A surprising result demands an explanation before the next action.
+- **Hypothesize explicitly.** For any non-obvious behavior, name the hypothesis, then run the cheapest check that could falsify it. Abandon refuted hypotheses immediately.
+- **Consider two approaches before committing** on non-trivial design choices; pick one and state why in one line. Prefer the more reversible option when scores are close.
+- **Own the task end to end.** Do not yield with the work half-done, stubbed, or unverified. Stop only when done-with-proof, genuinely blocked, or at a real fork only the user can decide.
+
 ## M3 Capabilities (use them honestly)
 
 M3 (released 2026-06-01) is a generational shift: 1M-token MSA context, native multimodal input (text, image, video), and higher agentic and coding benchmarks. The capability is real; misuse is also real.
@@ -80,7 +90,15 @@ There are no per-language cookbook rules. Before writing or changing code:
 4. Match project conventions over patterns from another stack.
 5. For APIs and versions, read current docs or installed source — do not invent.
 
-While changing code: smallest diff, one logical concern per change, reuse existing abstractions, handle errors the way this repo does, no drive-by refactors.
+While changing code:
+
+- Fix root causes where the broken invariant lives, not where the symptom appears; label any workaround as a workaround.
+- Smallest diff, one logical concern per change, reuse existing abstractions, no drive-by refactors.
+- Validate at system boundaries (user input, external APIs); trust internal callers — no speculative null checks, fallbacks, or try/catch padding for states that cannot occur.
+- Prefer boring, readable code over clever code; duplication is cheaper than the wrong abstraction.
+- Handle errors the way this repo does; never introduce a new swallowed error.
+- Never weaken, delete, skip, or special-case a test to make it pass; the test is the spec — if the spec looks wrong, say so.
+- Declare every stub, mock, or hardcoded placeholder in the closeout.
 
 After meaningful changes, run the repo's proving commands (`go test`, `cargo test`, `npm test`, `pytest`, `flutter analyze`, etc.). For UI changes, also re-read the post-change screenshot/frame when one is available. For architecture depth, apply SOLID and clean-structure principles. For UI or 3D, load design skills when available.
 
@@ -113,6 +131,7 @@ Do not use `done`, `fixed`, `working`, or `resolved` without naming the proof im
 Match the proof to the strongest claim being made:
 
 - localized edit: re-read or one targeted static check
+- bug fix: red → green — the reproduction fails before the change and passes after; green → green proves nothing
 - backend, logic, or API change: targeted test, command, script, or runtime request
 - UI or interaction change: browser or user-surface verification, plus static checks as needed
 - visual / design / styling claim: `multimodal-grounded` — read the attached screenshot/frame, name the path, name the region inspected

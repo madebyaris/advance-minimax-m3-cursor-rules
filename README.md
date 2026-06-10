@@ -2,7 +2,7 @@
 
 # MiniMax M3 Cursor Rules
 
-#### A durable execution spine for repo-scale engineering, agent teams, deep skills, and dynamic tool use on M3 + Cursor 3.
+#### A durable execution spine for repo-scale engineering on M3 + Cursor 3 — with frontier-agent coding judgment and reasoning protocols distilled into rules any model can run.
 
 [![Stars](https://img.shields.io/github/stars/madebyaris/advance-minimax-m3-cursor-rules?style=flat-square&color=8b5cf6)](https://github.com/madebyaris/advance-minimax-m3-cursor-rules/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
@@ -15,7 +15,7 @@
 <br/>
 
 ![Always-On Rules](https://img.shields.io/badge/Always--On-2_rules-0f172a?style=for-the-badge)
-![Requestable Rules](https://img.shields.io/badge/Requestable-16_rules-1e293b?style=for-the-badge)
+![Requestable Rules](https://img.shields.io/badge/Requestable-18_rules-1e293b?style=for-the-badge)
 ![Skills](https://img.shields.io/badge/Skills-7_packs-14b8a6?style=for-the-badge)
 
 <br/>
@@ -36,17 +36,18 @@
 
 | | What you get |
 |---|---|
-| Lean always-on core | Two durable rules carry the execution spine — solver loop, scope control, code discipline, M3 long-context discipline, M3 multimodal input discipline, and a strict proof contract. No persona bloat. |
-| Progressive depth | 16 requestable rules + 7 skill packs load only when the task needs them, so context stays clean. |
+| Lean always-on core | Two durable rules carry the execution spine — reasoning protocol, solver loop, scope control, code discipline, M3 long-context discipline, M3 multimodal input discipline, and a strict proof contract. No persona bloat. |
+| Frontier craft, distilled | The `fable5-*` craft rules transfer the judgment behind SWE-Bench-class agents — locate-before-write, root-cause method, simplicity taste, test integrity, hypothesis ledgers, stuck-strategy ladder — to M3 and any open model. |
+| Progressive depth | 18 requestable rules + 7 skill packs load only when the task needs them, so context stays clean. |
 | M3 long-context discipline | 1M-token MSA context is a real lever, but the failure mode shifts to "kept too much raw output." A dedicated skill (`minimax-m3-long-context`) teaches the retention and compression cadence. |
 | M3 multimodal-native | Image and video inputs ground visual claims (`multimodal-grounded`). A dedicated skill (`minimax-m3-multimodal-input`) teaches the design-parity and screenshot-triage workflow. |
 | Cursor 3 surface | Explicit guidance for the Agents Window, `/worktree`, `/best-of-n`, `Await`, MCP Apps structured content, and Composer 2. |
 | Honest tool use | The agent works the *current* runtime — no invented tools, no stale wrappers, no promises before the path is confirmed. |
-| Evidence-backed closeouts | Explicit status labels (`verified` / `unverified` / `blocked` / `multimodal-grounded`) and minimum-proof rules per change type. |
+| Evidence-backed closeouts | Explicit status labels (`verified` / `unverified` / `blocked` / `multimodal-grounded`), minimum-proof rules per change type, and red → green proof for bug fixes. |
 | Portable | `docs/AGENTS.md` carries the same behavior to non-Cursor IDEs and CLIs. |
 | Model-resilient | Tuned for M3 first, compatible with any Cursor-supported model. |
 
-> **The bet:** MiniMax doesn't get better from persona text. It gets better from cleaner context, smaller proving slices, better tool routing, and honest verification. Every rule here optimizes for that.
+> **The bet:** MiniMax doesn't get better from persona text. It gets better from cleaner context, smaller proving slices, better tool routing, honest verification — and the same judgment habits frontier agents use: fix the broken invariant, not the symptom; never game a test; update the plan after every tool result. Every rule here optimizes for that.
 
 ---
 
@@ -61,10 +62,10 @@ cp -r advance-minimax-m3-cursor-rules/.cursor your-project/.cursor
 
 That's it. Two rules are **always on**:
 
-- `.cursor/rules/minimax-m3-core.mdc` — execution behavior, M3 long-context discipline, M3 multimodal input discipline
-- `.cursor/rules/minimax-m3-status-verification.mdc` — status & proof contract (now including `multimodal-grounded`)
+- `.cursor/rules/minimax-m3-core.mdc` — reasoning protocol, execution behavior, code discipline, M3 long-context discipline, M3 multimodal input discipline
+- `.cursor/rules/minimax-m3-status-verification.mdc` — status & proof contract (`multimodal-grounded` visual proof, red → green for bug fixes)
 
-Everything else is **requestable** and narrower by design — it loads when the task or file globs call for it.
+Everything else is **requestable** and narrower by design — it loads when the task or file globs call for it. The two `fable5-*` craft rules load for non-trivial coding and reasoning work; the rest attach by runtime or domain.
 
 > The official docs recommend Anthropic-compatible access for MiniMax text models, and also support OpenAI-compatible access paths. See [MiniMax text generation docs](https://platform.minimax.io/docs/guides/text-generation) · [MiniMax API overview](https://platform.minimax.io/docs/api-reference/api-overview).
 
@@ -78,10 +79,15 @@ Copy `docs/AGENTS.md` into the target repo root as `AGENTS.md`. It lives under `
 
 ```text
 .cursor/
-├── rules/                         # 18 rules (2 always-on + 16 requestable)
-│   ├── minimax-m3-core.mdc                  ★ always-on · execution spine + M3 disciplines
-│   ├── minimax-m3-status-verification.mdc   ★ always-on · proof contract (+ multimodal-grounded)
+├── rules/                         # 20 rules (2 always-on + 18 requestable)
+│   ├── minimax-m3-core.mdc                  ★ always-on · execution spine + reasoning protocol + M3 disciplines
+│   ├── minimax-m3-status-verification.mdc   ★ always-on · proof contract (+ multimodal-grounded, red → green)
+│   ├── fable5-coding-craft.mdc              requestable · frontier coding judgment distillation
+│   ├── fable5-reasoning.mdc                 requestable · frontier thinking protocols
 │   └── …                                    requestable: runtime + domain
+├── agents/                        # subagents (/debugger, /verifier)
+│   ├── debugger.md                          root-cause analysis: hypothesis ledger, bisection, fix-at-the-owner
+│   └── verifier.md                          adversarial validation: claim-gaming hunt, proof execution
 └── skills/                        # 7 deep, structured skill packs
     ├── anti-slop-design/
     ├── 3d-web-experiences/
@@ -105,11 +111,12 @@ This repo makes MiniMax M3 feel strong exactly where the M3 release puts its emp
 - 1M-token MSA context — and the discipline to use it without bloating
 - native multimodal input (image, video) — and the discipline to ground visual claims in the actual file
 - higher agentic and coding benchmarks — leveraged through role separation and explicit verification
+- frontier coding judgment — the `fable5-*` craft rules distill the habits behind SWE-Bench-class scores (root-cause method, test integrity, interleaved thinking) into a form open models can follow
 - agent harnesses and multi-agent collaboration, including `/best-of-n` as a first-class team pattern
 - long skill packs and detailed tool contracts that load only when relevant
 - dynamic tool discovery in changing environments (Cursor 3's evolving MCP + plugin surface)
 
-The goal is **not** to make MiniMax imitate another provider's tone. It is to give M3 a durable execution spine that complements its official positioning around real-world engineering, complex skills, agent workflows, long context, and multimodal grounding.
+The goal is **not** to make MiniMax imitate another provider's tone. It is to transfer the *judgment* — where to change code, how to prove a fix, when to switch strategy — while M3 keeps its own voice. A durable execution spine that complements its official positioning around real-world engineering, complex skills, agent workflows, long context, and multimodal grounding.
 
 <details>
 <summary><b>Why M3-native (and what that optimizes for)</b></summary>
@@ -186,6 +193,10 @@ A few behaviors the repo treats as non-negotiable:
 - Scaffolding uses the framework's official CLI / `create` / `init` path when one exists.
 - Scaffold output is inspected before continuing.
 - Runnable work is not "done" until there is **runnable proof**, not just static confidence.
+- Bug fixes are proven **red → green**: the reproduction fails before the change and passes after. A check that was never red proves nothing.
+- Tests are never weakened, skipped, or special-cased to reach green — the test is the spec; if the spec looks wrong, that goes to the user.
+- Fixes land at the **root cause** (the broken invariant), not at the symptom site; shipped workarounds are labeled as workarounds.
+- Stubs, mocks, and hardcoded placeholders are declared in the closeout — never presented as finished behavior.
 - Visual work is not "done" until the post-change frame is re-read (`multimodal-grounded`).
 - If a required check fails or is skipped, the agent reports `blocked` or `implemented but unverified` — never a false completion.
 - Browser or user-surface verification is required for UI and interaction claims.
@@ -196,14 +207,23 @@ A few behaviors the repo treats as non-negotiable:
 
 ## Rule Architecture
 
-The system is layered: a tiny always-on core, runtime rules that load on demand, and domain rules that attach via file globs. Depth lives in skills.
+The system is layered: a tiny always-on core, craft rules that carry frontier judgment, runtime rules that load on demand, and domain rules that attach via file globs. Depth lives in skills.
 
 ### ★ Always-On Core
 
 | File | Purpose |
 |------|---------|
-| `minimax-m3-core.mdc` | Durable execution behavior: solver loop, scope control, code discipline, M3 long-context discipline, M3 multimodal input discipline, truthful tool use, scaffold discipline, concise progress |
-| `minimax-m3-status-verification.mdc` | Status & proof contract: exact claim labels, proof matching, `multimodal-grounded` visual proof, evidence-first closeouts |
+| `minimax-m3-core.mdc` | Durable execution behavior: reasoning protocol (intent-first, interleaved thinking, explicit hypotheses, end-to-end ownership), solver loop, scope control, code discipline (root-cause-first, boundary validation, test integrity), M3 long-context discipline, M3 multimodal input discipline, truthful tool use, scaffold discipline, concise progress |
+| `minimax-m3-status-verification.mdc` | Status & proof contract: exact claim labels, proof matching, red → green for bug fixes, `multimodal-grounded` visual proof, evidence-first closeouts |
+
+### Craft Rules (Fable 5 Distillation)
+
+Frontier-agent judgment distilled into requestable rules — the habits behind SWE-Bench-class scores, made transferable to M3 and any open model:
+
+| File | Purpose |
+|------|---------|
+| `fable5-coding-craft.mdc` | The craft hierarchy, locate-before-write, root-cause method (broken-invariant chain), simplicity taste, error-handling philosophy, test integrity, refactoring discipline, LLM failure modes and counters |
+| `fable5-reasoning.mdc` | Three-readings task interpretation, risk-first decomposition, approach selection, interleaved thinking loop (surprise rule, stale-plan rule), hypothesis ledgers, premortems, calibration, stuck-strategy ladder |
 
 ### Runtime Rules
 
@@ -216,7 +236,7 @@ The system is layered: a tiny always-on core, runtime rules that load on demand,
 | `agent-teams.mdc` | Role boundaries, multi-environment handoffs, `/best-of-n` as a team pattern, escalation, serial vs parallel |
 | `tool-discovery.mdc` | Runtime tool inventory, MCP/schema discovery, MCP Apps structured content, safe fallbacks |
 | `minimax-mcp-tools.mdc` | Current-doc retrieval, direct-tool preference, version-aware lookups, MCP Apps structured content |
-| `minimax-m3-verification.mdc` | Proportional verification playbook (shell + browser + multimodal-grounded checks) |
+| `minimax-m3-verification.mdc` | Proportional verification playbook (shell + browser + multimodal-grounded checks, test integrity during verification) |
 | `minimax-m3-self-evolution.mdc` | Iterative refinement loops, compress-before-iterate, autonomous debugging |
 | `skill-authoring.mdc` | When to use skills, how to structure them, how to declare `model_assumptions` |
 | `clarify-first-prompting.mdc` | Ask only on real forks, after inspecting first |
@@ -227,7 +247,7 @@ Requestable rules for cross-cutting domains — **not** per-language cookbooks. 
 
 | File | Purpose |
 |------|---------|
-| `language-agnostic-patterns.mdc` | SOLID, design patterns, change discipline, code-review heuristics |
+| `language-agnostic-patterns.mdc` | Pattern judgment (when *not* to apply), SOLID, design patterns, change discipline, code-review heuristics |
 | `design-systems.mdc` | Tokens, shadcn/ui, Tailwind v4 mechanics → aesthetics via `anti-slop-design` |
 | `3d-graphics.mdc` | Three.js / R3F syntax, container sizing, import traps → quality via `3d-web-experiences` |
 | `devops-infrastructure.mdc` | Docker, k8s, Terraform, CI/CD — validate-before-apply, infra traps (lean) |
@@ -364,7 +384,7 @@ Want concrete M3-native patterns instead of only rules? Start here:
 
 `docs/AGENTS.md` is the portable, standalone version of M3 behavior for environments that use agent instruction files but don't support Cursor rules. It carries the core behavior directly instead of acting as a thin pointer.
 
-It focuses on action-first execution, solver-loop thinking, scope control, read-before-edit discipline, proportional verification, explicit status labels (now including `multimodal-grounded`), M3 long-context discipline, M3 multimodal input discipline, current-source version discipline, CLI-first scaffolding, and concise communication.
+It focuses on action-first execution, the reasoning protocol (intent-first, interleaved thinking, explicit hypotheses, end-to-end ownership), solver-loop thinking, scope control, read-before-edit discipline, root-cause-first code discipline with test integrity, proportional verification (including red → green for bug fixes), explicit status labels (including `multimodal-grounded`), M3 long-context discipline, M3 multimodal input discipline, current-source version discipline, CLI-first scaffolding, and concise communication.
 
 > **To use it elsewhere:** copy `docs/AGENTS.md` into the target repo root as `AGENTS.md`. If you run both `AGENTS.md` and `.cursor/rules`, keep them aligned rather than letting them drift into contradictory layers.
 
