@@ -33,8 +33,30 @@ Prefer **semantic names** mapped to CSS variables so themes and shadcn primitive
 ```
 
 - Derive real values from the project brand or `anti-slop-design` Category Guide — placeholders above are structural only.
+- Prefer **OKLCH** for new token values (`oklch(0.65 0.15 250)`) — perceptually uniform lightness makes scales and dark-mode variants predictable. Tint neutrals toward the brand hue (chroma 0.005–0.01); never ship pure-gray scales or pure `#000`/`#FFF`.
+- Three token tiers when the system grows: **primitive** (`--blue-600`) → **semantic** (`--color-primary`) → **component** (`--button-bg`). Components consume semantic tokens; only semantic tokens reference primitives. Skip the component tier until a component actually needs an override.
 - Do not default to generic blue/indigo scales or `Inter` / `Roboto` unless the project already uses them.
 - Status colors: `--destructive`, `--success`, etc. — keep consistent with shadcn semantic tokens when present.
+
+---
+
+## Typography Mechanics
+
+- Fluid display sizes with `clamp()`: `font-size: clamp(2rem, 1.2rem + 3.5vw, 4rem)` — no breakpoint jumps on headings.
+- Pair line-height inversely with size: body `1.6–1.8`, headings `1.1–1.2`. A 56px heading at `line-height: 1.6` is broken.
+- Tighten tracking as display size grows (`letter-spacing: -0.01em` to `-0.04em` above ~32px); never negative-track body text.
+- Body measure: `max-width: 65ch` on prose containers, not pixel guesses.
+- Keep ≥1.25 ratio between adjacent type-scale steps; expose the scale as tokens, not ad-hoc `text-[17px]` values.
+- Load fonts with `font-display: swap` and preconnect; subset when the toolchain supports it.
+
+---
+
+## Motion Mechanics
+
+- Animate only `transform` and `opacity`; never `width`/`height`/`top`/`margin` (layout thrash).
+- Tokenize easing and duration: `--ease-out: cubic-bezier(0.22, 1, 0.36, 1)`, durations 150–250ms for micro-interactions, 400–600ms for entrances.
+- Gate all non-essential motion behind `@media (prefers-reduced-motion: no-preference)`.
+- Stagger entrances with `animation-delay` increments (60–100ms); one orchestrated page entrance beats scattered micro-animations.
 
 ---
 
@@ -64,6 +86,7 @@ npx shadcn@latest add button card input label form dialog
 - One primary CTA per section; secondary actions visually quieter.
 - Consistent `max-width` and horizontal padding across sections (hero → footer).
 - Extract repeated class strings into components — do not paste 20-class strings everywhere.
+- Never nest cards; separate grouped content with background shifts or whitespace instead.
 - Charts and fixed-height embeds (Chart.js, maps): parent container **must** have explicit height (same discipline as 3D canvases).
 
 ---

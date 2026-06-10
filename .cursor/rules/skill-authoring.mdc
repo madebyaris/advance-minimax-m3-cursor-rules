@@ -1,5 +1,5 @@
 ---
-description: "MiniMax M3 + Cursor 3 skill authoring: when to use skills, how to structure them, how to keep them deep without duplicating the core, and how to declare model assumptions."
+description: "MiniMax M3 + Cursor 3.7 skill authoring: when to use skills, how to structure them, how to keep them deep without duplicating the core, and how to declare model assumptions."
 alwaysApply: false
 ---
 
@@ -54,7 +54,7 @@ Rules:
 - `metadata.model_assumptions` (optional) should name the model capabilities the skill depends on, e.g.:
   - `multimodal-input: required` — the skill expects the user can attach images/video that the model can read natively
   - `long-context: recommended` — the skill expects a 1M-class context window for the loader to be useful
-  - `cursor-3-runtime: required` — the skill expects the Cursor 3 / Agents Window surface
+  - `cursor-3-runtime: required` — the skill expects the Cursor 3.7 / Agents Window surface
 
 ## Progressive Disclosure
 

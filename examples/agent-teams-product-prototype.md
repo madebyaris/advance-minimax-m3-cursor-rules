@@ -1,6 +1,6 @@
 # M3 Example: Agent-Team Product Prototype
 
-This example shows a concrete M3 + Cursor 3 agent-team workflow for turning a vague product request into a verified prototype without collapsing every responsibility into one agent.
+This example shows a concrete M3 + Cursor 3.7 agent-team workflow for turning a vague product request into a verified prototype without collapsing every responsibility into one agent.
 
 Use it together with:
 
@@ -105,14 +105,14 @@ Each handoff should include:
 Goal:
 Repo / workspace root:
 Environment: local | /worktree | cloud | SSH
-Model: MiniMax-M3 | composer-2 | auto | ...
+Model: MiniMax-M3 | composer-2.5 | auto | ...
 Owned surface:
 What changed or was learned:
 Open risks or assumptions:
 Next required action:
 ```
 
-The environment and model fields are M3 + Cursor 3 defaults — name them so a reviewer can reproduce the run and so that `/best-of-n` comparisons stay legible.
+The environment and model fields are M3 + Cursor 3.7 defaults — name them so a reviewer can reproduce the run and so that `/best-of-n` comparisons stay legible.
 
 ## Example Delegation
 
@@ -164,9 +164,9 @@ Return:
 Do not edit unless asked.
 ```
 
-## Why This Pattern Fits M3 + Cursor 3
+## Why This Pattern Fits M3 + Cursor 3.7
 
-It matches the M3 + Cursor 3 emphasis on:
+It matches the M3 + Cursor 3.7 emphasis on:
 
 - role boundaries
 - multi-agent collaboration
@@ -175,7 +175,7 @@ It matches the M3 + Cursor 3 emphasis on:
 - 1M-token long-context discipline when the team reads across a large repo
 - native multimodal input when the user attaches a mock, screenshot, or screen recording
 
-A few M3 + Cursor 3 mechanics that make this pattern stronger:
+A few M3 + Cursor 3.7 mechanics that make this pattern stronger:
 
 - **`/best-of-n` for the design / architecture decision.** When the team needs to pick the strongest architecture, layout, or refactor approach, run the same prompt to 2–4 models in parallel `/worktree` sessions and synthesize. The "verifier" role then reads all outputs and picks or merges.
 - **`Await` for long-running branches.** If the verifier triggers a long-running check (browser load, e2e run, build), do not poll; use the `Await` tool on the background shell or a specific output token (`Ready`, `Compiled`, `Error`).

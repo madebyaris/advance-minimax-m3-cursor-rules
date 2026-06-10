@@ -1,9 +1,9 @@
 ---
 name: anti-slop-design
-description: Category-aware design skill that builds distinctive, production-grade UIs. Palettes, font pairings, UX patterns, shadcn/token integration, empty-error-loading copy, secondary slop signals, multimodal design parity from mocks, and a pre-ship second pass. Framework-agnostic.
+description: Category-aware design skill that builds distinctive, production-grade UIs. Brand-vs-product register, color strategy commitment, scene-based theme choice, palettes, font pairings, UX patterns, shadcn/token integration, empty-error-loading copy, secondary slop signals, multimodal design parity from mocks, and a pre-ship second pass. Framework-agnostic.
 license: MIT
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   category: design
   sources:
     - Project design systems and token files
@@ -46,10 +46,32 @@ Skip this step only for standalone demos or canvases with no project context.
 
 Before writing any UI code, commit to a direction. Never skip this.
 
-1. **Identify the category.** Match the project to a row in the Category Design Guide below.
-2. **Pick the tone.** Use the category's recommended tone or choose a bold alternative -- never "modern and clean" (that is generic).
-3. **State the memorable thing.** What is the ONE element someone will remember? Commit to it.
-4. **Vary across generations.** If your last output was dark editorial, the next must differ -- unless the user explicitly requests consistency.
+1. **Pick the register.** Every surface is **brand** (marketing, landing, campaign, portfolio -- design IS the product) or **product** (app UI, dashboard, admin, tool -- design SERVES the task). Brand surfaces earn drama; product surfaces earn clarity, restraint, and density control. Two common slop sources: brand drama applied to product UI, and timid product defaults applied to brand pages.
+2. **Identify the category.** Match the project to a row in the Category Design Guide below.
+3. **Pick the tone.** Use the category's recommended tone or choose a bold alternative -- never "modern and clean" (that is generic). Tone vocabulary to draw from: brutally minimal, maximalist, retro-futuristic, organic/natural, luxury/refined, playful/toy-like, editorial/magazine, brutalist/raw, art deco/geometric, industrial/utilitarian.
+4. **Choose the theme from a scene, not a category.** Dark vs. light is never a default. Write one sentence of physical scene -- who uses this, where, under what ambient light, in what mood -- and let it force the answer. "SRE glancing at incident severity at 2am in a dim room" forces dark; "the category is observability" forces nothing.
+5. **Pick a color strategy** (see Color Strategy below) before picking any hex values.
+6. **State the memorable thing.** What is the ONE element someone will remember? Commit to it.
+7. **Vary across generations.** If your last output was dark editorial, the next must differ -- unless the user explicitly requests consistency.
+
+**Intentionality over intensity.** Bold maximalism and refined minimalism both work; the only failure is timid genericness. Match implementation complexity to the vision: maximalist directions need elaborate code and orchestrated effects; minimal directions need precision in spacing, type, and subtle detail. Restraint executed well is a strong direction, not a missing one.
+
+---
+
+## Color Strategy (commit before picking hexes)
+
+Four steps on a commitment axis -- choose one deliberately per surface:
+
+| Strategy | What it means | Use for |
+|----------|---------------|---------|
+| **Restrained** | Tinted neutrals + one accent on ≤10% of the surface | Product UI default, dense dashboards, minimalist brand |
+| **Committed** | One saturated color carries 30–60% of the surface | Identity-driven brand pages, bold landing heroes |
+| **Full palette** | 3–4 named color roles, each used deliberately | Campaigns, editorial layouts, data visualization |
+| **Drenched** | The surface IS the color | Brand heroes, campaign moments, posters |
+
+The accent-counting rule in the Slop Second Pass applies to **Restrained** only -- Committed, Full palette, and Drenched exceed it on purpose. Do not collapse every design to Restrained by reflex, and do not "decorate" a Restrained product surface into Committed by accident.
+
+Mechanics: prefer OKLCH when the stack allows. Tint every neutral toward the brand hue (chroma 0.005–0.01 is enough -- never pure gray). Reduce chroma as lightness approaches 0 or 100; high chroma at the extremes looks garish.
 
 ---
 
@@ -67,6 +89,11 @@ These are the statistical median of AI training data. Never generate them:
 - Colored-circle-initial avatars
 - 5-star yellow rating widgets
 - Cookie-cutter components with no context-specific character
+- Side-stripe accent borders (`border-left: 4px solid` on cards, callouts, alerts) -- use full borders, background tints, or a leading icon instead
+- Gradient text (`background-clip: text` over a gradient) -- emphasize with weight, size, or a solid color
+- The hero-metric template (big number + small label + gradient accent) as the only dashboard idea
+- Nested cards (a card inside a card) -- flatten, or separate with background shifts
+- Modal as the first thought -- exhaust inline editing and progressive disclosure before reaching for a dialog
 
 ### Secondary slop signals (also avoid)
 
@@ -114,6 +141,8 @@ When the project already uses **shadcn/ui**, **Radix**, **MUI**, or similar:
 ## Category Design Guide
 
 Match the project to a category. Use the palette, fonts, and patterns as your starting point -- then push further.
+
+**Category-reflex check.** These tables are a floor, not a ceiling. If someone could guess your palette from the category name alone (healthcare → teal on white, fintech → navy + gold, gaming → neon on black), you have reproduced the training-data median -- the polished version of slop. Run the scene sentence, the tone choice, and any brand inputs against the table until the domain no longer fully predicts the design.
 
 ### SaaS / Developer Tools
 
@@ -289,6 +318,9 @@ These apply universally across all categories.
 ### Typography
 - Distinctive font pairings mandatory -- use the category guide as starting point.
 - Hierarchy through weight and color, not just size. De-emphasize secondary text with tinted muted colors, not smaller-and-black.
+- Keep ≥1.25 ratio between adjacent scale steps -- flat scales read as no hierarchy at all.
+- Tighten letter-spacing as display size grows (`-0.01em` to `-0.04em` above ~32px); never negative-track body text.
+- Cap body measure at 65–75ch regardless of category.
 - Left-align body text. Center-align only for short hero headlines.
 
 ### Color
@@ -298,13 +330,17 @@ These apply universally across all categories.
 
 ### Spacing and Layout
 - Start with too much whitespace, then tighten. Strict 4px-based spacing scale.
-- Integrated over boxed: elements breathe on the canvas, not everything in cards.
+- Vary spacing for rhythm -- identical padding on every section is monotony, not consistency.
+- Integrated over boxed: elements breathe on the canvas, not everything in cards. Cards are the lazy default -- use them only when grouping is truly the right affordance, and never nest them.
+- Spatial composition is a tool: asymmetry, overlap, diagonal flow, and one deliberate grid-breaking element beat a perfectly safe stack of centered blocks (brand surfaces especially).
 - All sections share the same `max-width` and horizontal padding -- edges align hero to footer.
 - Hero: `height: 100svh` with symmetric vertical padding for true optical centering.
 
 ### Motion
 - Orchestrated page entrance with staggered `animation-delay` reveals.
 - `IntersectionObserver` for scroll-triggered fade-up/slide-in below the fold.
+- Animate only `transform` and `opacity` -- never layout properties (`width`, `height`, `top`, `margin`).
+- Ease out with exponential curves (ease-out-quart/quint/expo). No bounce or elastic in product UI; reserve spring physics for deliberately playful brand moments.
 - Hover states that surprise: scale, color shift, shadow, underline. Not just opacity.
 - Always respect `prefers-reduced-motion`.
 
@@ -402,8 +438,8 @@ Overrides:
 
 ```
 1. READ    -> Inspect project: styling approach, existing tokens, fonts, icons
-2. MATCH   -> Identify category from the Category Design Guide
-3. COMMIT  -> State tone + memorable element in one sentence
+2. MATCH   -> Register (brand vs product) + category from the Category Design Guide
+3. COMMIT  -> Scene sentence (theme) + color strategy + tone + memorable element
 4. BUILD   -> Apply category palette, fonts, and patterns + Taste Layer principles
 5. CHECK   -> Run Pre-Delivery Checklist + Slop second pass before presenting
 ```
@@ -416,9 +452,10 @@ After the main checklist, scan once for:
 
 1. **Sameness**: If two sections could swap places with no loss of meaning, differentiate structure or merge them.
 2. **Proof**: At least one place shows **real product, real data shape, or real imagery** — not only abstract shapes and lorem.
-3. **One accent rule**: Count accent-color uses; if more than three competing "look at me" elements per viewport, demote some to neutral.
-4. **Touch**: Every primary action on mobile is reachable and ≥44px; no hover-only affordances.
-5. **Voice**: Read headings aloud — if they could apply to any competitor, rewrite.
+3. **One accent rule** (Restrained strategy only): Count accent-color uses; if more than three competing "look at me" elements per viewport, demote some to neutral. For Committed/Full/Drenched strategies, check instead that the color commitment is consistent, not accidental.
+4. **Category reflex**: Could someone guess the palette from the category name alone? If yes, push at least one axis (theme, accent, type) off the median.
+5. **Touch**: Every primary action on mobile is reachable and ≥44px; no hover-only affordances.
+6. **Voice**: Read headings aloud — if they could apply to any competitor, rewrite.
 
 ---
 
@@ -427,22 +464,23 @@ After the main checklist, scan once for:
 Before presenting any UI code, verify every item:
 
 ```
-[ ] Design thinking completed (category identified, tone stated)
+[ ] Design thinking completed (register + category identified, scene sentence written, color strategy + tone stated)
 [ ] No banned patterns (Inter, purple gradients, emoji icons, empty heroes, 3-col card grids)
+[ ] No side-stripe borders, gradient text, nested cards, or reflexive modals
 [ ] Font pairing is distinctive and matches category
 [ ] Icons from real SVG library (Lucide, Heroicons, Phosphor)
 [ ] Hero and feature areas have imagery or decorative fills
 [ ] Color palette uses CSS variables, tinted grays, no pure #000/#FFF
 [ ] Sections share consistent max-width and padding
 [ ] Responsive: tested mentally at 375px, 768px, 1024px, 1440px
-[ ] prefers-reduced-motion respected for all animations
+[ ] Motion animates only transform/opacity with ease-out curves; prefers-reduced-motion respected
 [ ] Accessibility: 4.5:1 contrast, visible focus states, form labels
 [ ] Cursor pointer on all clickable elements
 [ ] Hover states provide clear visual feedback (not just opacity)
 [ ] No secondary slop: blob trio hero, stacked glass panels, fake logo wall, motion soup
 [ ] If shadcn/MUI/Radix: colors/radius mapped to tokens, components not rewritten unnecessarily
 [ ] Empty / error / loading states are specific and actionable, not generic placeholders
-[ ] Slop second pass completed (sameness, proof, accent discipline, touch, voice)
+[ ] Slop second pass completed (sameness, proof, accent discipline, category reflex, touch, voice)
 ```
 
 ---
@@ -496,18 +534,21 @@ Before presenting any UI code, verify every item:
 
 ```
 READ    -> package.json, tailwind.config, existing fonts/icons
-MATCH   -> Category Design Guide table
-COMMIT  -> Tone + memorable element in one sentence
+MATCH   -> Register (brand vs product) + Category Design Guide table
+COMMIT  -> Scene sentence + color strategy + tone + memorable element
 BUILD   -> Category palette + fonts + Taste Layer principles
 CHECK   -> Pre-Delivery Checklist (no slop, no banned patterns)
 
 BANNED  -> Inter, Roboto, Arial, purple gradients, emoji icons,
            empty heroes, 3-col card grids, thick gray borders,
            colored-circle avatars, pure #000/#FFF,
-           blob trio heroes, nested glass, fake logos, generic SaaS copy
+           blob trio heroes, nested glass, fake logos, generic SaaS copy,
+           side-stripe borders, gradient text, nested cards,
+           hero-metric template, modal-as-first-thought
 
-ALWAYS  -> Real SVG icons, tinted grays, CSS variables, responsive,
-           prefers-reduced-motion, 4.5:1 contrast, cursor pointer,
-           consistent max-width, distinctive font pairing,
+ALWAYS  -> Real SVG icons, tinted grays (toward brand hue), CSS variables,
+           responsive, prefers-reduced-motion, 4.5:1 contrast, cursor pointer,
+           consistent max-width, distinctive font pairing, ≥1.25 type ratio,
+           transform/opacity-only motion with ease-out curves,
            tokens over ripping UI kits, second-pass slop scan
 ```

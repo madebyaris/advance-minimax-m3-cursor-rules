@@ -451,6 +451,11 @@ Use when auditing a full page or comparing two layout directions.
 | Dark theme + neon purple CTA only | Crypto/template | Category navy/teal/gold; neon only for entertainment/gaming |
 | Identical `rounded-2xl` on every surface | Card soup | Mix: full-bleed sections, flush tables, one elevated panel |
 | Chart with random upward curve | Misleading | Real axis labels, source, or remove chart |
+| Colored `border-left` stripe on cards/alerts | The default "status accent" | Full border, background tint, or leading icon |
+| Gradient `background-clip: text` headline | Decorative, never meaningful | Solid color; emphasis via weight or size |
+| Big-number hero-metric card grid | SaaS dashboard cliché | Lead with the user's task; metrics inline with context and trend |
+| Card nested inside a card | Double-boxed grouping | Flatten; separate with background shift or whitespace |
+| Modal for every interaction | Laziness pattern | Inline editing, expandable rows, progressive disclosure first |
 
 ---
 

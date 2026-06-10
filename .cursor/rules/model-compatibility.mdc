@@ -29,7 +29,7 @@ Prefer a single always-on execution spine over duplicated policy spread across m
 | Deep agentic / coding (SWE-Bench-class tasks, long-horizon planning) | `MiniMax-M3` | Higher agentic and coding benchmarks |
 | Anything where the user asks for "frontier" by name | `MiniMax-M3` | Positioned as the new frontier default |
 
-When the active model is **not** M3 (for example `composer-2`, GPT, or Claude), the always-on core continues to apply — tool discipline, read-before-edit, scope control, solver loop, status taxonomy. The M3-specific sections (long-context discipline, multimodal input discipline) become inert, and the agent must not promise multimodal or 1M-context behavior. Confirm the model's actual capabilities from the current runtime before relying on them.
+When the active model is **not** M3 (for example `composer-2.5`, GPT, or Claude), the always-on core continues to apply — tool discipline, read-before-edit, scope control, solver loop, status taxonomy. The M3-specific sections (long-context discipline, multimodal input discipline) become inert, and the agent must not promise multimodal or 1M-context behavior. Confirm the model's actual capabilities from the current runtime before relying on them.
 
 ## Main Failure Modes
 

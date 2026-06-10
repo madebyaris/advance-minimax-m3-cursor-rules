@@ -61,6 +61,7 @@ Never ship the default look. Before coding, decide:
 3. **Material direction**: realistic PBR, glass/transmission, stylized/toon, or gradient. Match the 2D brand palette (coordinate with `anti-slop-design`).
 4. **The memorable moment**: the ONE thing a viewer remembers (a material, a reveal, a camera move, a light). Commit to it.
 5. **Tone mapping + color space are not optional**: set `ACESFilmic` (or `AgX` on recent three) tone mapping and correct output color space, or the scene reads flat and washed.
+6. **Damp all continuous motion**: camera moves, pointer-follow, and scroll-tied animation go through `MathUtils.damp`/lerp — never bind raw scroll or pointer values directly. Undamped motion is the 3D equivalent of no easing; it reads as cheap immediately.
 
 ---
 
@@ -76,6 +77,7 @@ These are the statistical-median 3D outputs. Do not ship them as the final look:
 - Bloom cranked on the whole scene so everything glows (bloom should be selective).
 - Particle fields of 10k points as a stand-in for an idea.
 - Ignoring mobile: shipping full DPR + heavy post-fx that melts phones, or a blank canvas where WebGL is unavailable.
+- The pasted-rectangle canvas: scene background mismatched with the page, hard edges, no compositional tie to the surrounding 2D layout. Blend with a matching clear color or transparent canvas, and let 2D content overlap the 3D so they read as one composition.
 
 Pivot each to something category-appropriate: real product geometry, an HDRI-lit material study, a purposeful camera move, selective emissive glow, or a restrained, readable composition.
 

@@ -2,11 +2,11 @@
 
 # MiniMax M3 Cursor Rules
 
-#### A durable execution spine for repo-scale engineering on M3 + Cursor 3 — with frontier-agent coding judgment and reasoning protocols distilled into rules any model can run.
+#### A durable execution spine for repo-scale engineering on M3 + Cursor 3.7 — with frontier-agent coding judgment and reasoning protocols distilled into rules any model can run.
 
 [![Stars](https://img.shields.io/github/stars/madebyaris/advance-minimax-m3-cursor-rules?style=flat-square&color=8b5cf6)](https://github.com/madebyaris/advance-minimax-m3-cursor-rules/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
-[![Cursor 3](https://img.shields.io/badge/Tested-Cursor%203-blue?style=flat-square)](https://cursor.com/blog/cursor-3)
+[![Cursor 3.7](https://img.shields.io/badge/Tested-Cursor%203.7-blue?style=flat-square)](https://cursor.com/changelog)
 [![MiniMax M3](https://img.shields.io/badge/MiniMax-M3-8b5cf6?style=flat-square)](https://platform.minimax.io)
 [![M3 1M Context](https://img.shields.io/badge/Context-1M_MSA-22c55e?style=flat-square)](https://platform.minimax.io)
 [![M3 Multimodal](https://img.shields.io/badge/Multimodal-Native-3b82f6?style=flat-square)](https://platform.minimax.io)
@@ -20,7 +20,7 @@
 
 <br/>
 
-*Tuned for **MiniMax M3** (1M-token MSA context, native multimodal input) and **Cursor 3** (Agents Window, `/worktree`, `/best-of-n`, `Await`, MCP Apps). Written to stay useful across model changes.*
+*Tuned for **MiniMax M3** (1M-token MSA context, native multimodal input) and **Cursor 3.7** (Agents Window, canvases, Design Mode, `/worktree`, `/best-of-n`, `Await`, MCP Apps). Written to stay useful across model changes.*
 
 <sub>
 
@@ -41,7 +41,7 @@
 | Progressive depth | 18 requestable rules + 7 skill packs load only when the task needs them, so context stays clean. |
 | M3 long-context discipline | 1M-token MSA context is a real lever, but the failure mode shifts to "kept too much raw output." A dedicated skill (`minimax-m3-long-context`) teaches the retention and compression cadence. |
 | M3 multimodal-native | Image and video inputs ground visual claims (`multimodal-grounded`). A dedicated skill (`minimax-m3-multimodal-input`) teaches the design-parity and screenshot-triage workflow. |
-| Cursor 3 surface | Explicit guidance for the Agents Window, `/worktree`, `/best-of-n`, `Await`, MCP Apps structured content, and Composer 2. |
+| Cursor 3.7 surface | Explicit guidance for the Agents Window, canvases, Design Mode, `/worktree`, `/best-of-n`, `Await`, MCP Apps structured content, and Composer 2.5. |
 | Honest tool use | The agent works the *current* runtime — no invented tools, no stale wrappers, no promises before the path is confirmed. |
 | Evidence-backed closeouts | Explicit status labels (`verified` / `unverified` / `blocked` / `multimodal-grounded`), minimum-proof rules per change type, and red → green proof for bug fixes. |
 | Portable | `docs/AGENTS.md` carries the same behavior to non-Cursor IDEs and CLIs. |
@@ -114,7 +114,7 @@ This repo makes MiniMax M3 feel strong exactly where the M3 release puts its emp
 - frontier coding judgment — the `fable5-*` craft rules distill the habits behind SWE-Bench-class scores (root-cause method, test integrity, interleaved thinking) into a form open models can follow
 - agent harnesses and multi-agent collaboration, including `/best-of-n` as a first-class team pattern
 - long skill packs and detailed tool contracts that load only when relevant
-- dynamic tool discovery in changing environments (Cursor 3's evolving MCP + plugin surface)
+- dynamic tool discovery in changing environments (Cursor 3.7's evolving MCP + plugin surface)
 
 The goal is **not** to make MiniMax imitate another provider's tone. It is to transfer the *judgment* — where to change code, how to prove a fix, when to switch strategy — while M3 keeps its own voice. A durable execution spine that complements its official positioning around real-world engineering, complex skills, agent workflows, long context, and multimodal grounding.
 
@@ -146,7 +146,7 @@ These rules do **not** assume you can steer a model's internal routing through p
 
 - cleaner context (with explicit retention decisions)
 - better decomposition
-- better tool routing (including the Cursor 3 surface)
+- better tool routing (including the Cursor 3.7 surface)
 - better verification loops, including `multimodal-grounded` visual proof
 - clearer definitions of done
 
@@ -230,7 +230,7 @@ Frontier-agent judgment distilled into requestable rules — the habits behind S
 | File | Purpose |
 |------|---------|
 | `model-compatibility.mdc` | Prompt hierarchy, M3-first model selection, tool discipline, context control across models |
-| `cursor-tools-mastery.mdc` | Cursor 3 tool-selection patterns: Agents Window, `/worktree`, `/best-of-n`, `Await`, Composer 2 |
+| `cursor-tools-mastery.mdc` | Cursor 3.7 tool-selection patterns: Agents Window, canvases, Design Mode, `/worktree`, `/best-of-n`, `Await`, Composer 2.5 |
 | `cursor-mcp-optimization.mdc` | Browser, Figma, Cloudflare tools, MCP Apps structured content, direct action patterns |
 | `cursor-agent-orchestration.mdc` | Multi-environment planning, `/best-of-n` as an orchestration primitive, `Await` for long-running branches |
 | `agent-teams.mdc` | Role boundaries, multi-environment handoffs, `/best-of-n` as a team pattern, escalation, serial vs parallel |
@@ -259,7 +259,7 @@ Skills keep deep, domain-specific procedures out of the always-on core, then del
 
 | Skill | Purpose |
 |------|---------|
-| `anti-slop-design/` | Category-aware design direction, anti-slop checks, UI polish, multimodal design parity from mocks |
+| `anti-slop-design/` | Brand-vs-product register, color strategy commitment, scene-based theme choice, category-aware direction, anti-slop checks, multimodal design parity from mocks |
 | `3d-web-experiences/` | Aesthetic direction, performance budgets, responsive WebGL, graceful degradation, multimodal reference parity |
 | `deep-research/` | Iterative mixed-source research, synthesis, anti-hallucination recovery, M3 long-context compression |
 | `incident-triage-harness/` | Production-style debugging and mitigation workflow, with M3 visual evidence handling |
@@ -273,13 +273,13 @@ Skills keep deep, domain-specific procedures out of the always-on core, then del
 
 ## M3 Runtime Modes
 
-MiniMax M3 (released 2026-06-01) is the target model for this repo. It ships a 1M-token MSA context window and native multimodal input (text, image, video). The repo is tuned for M3 first; it stays correct on third-party models such as `composer-2`, GPT, or Claude — the M3-specific sections (long-context discipline, multimodal input discipline) become inert and the always-on core continues to apply.
+MiniMax M3 (released 2026-06-01) is the target model for this repo. It ships a 1M-token MSA context window and native multimodal input (text, image, video). The repo is tuned for M3 first; it stays correct on third-party models such as `composer-2.5`, GPT, or Claude — the M3-specific sections (long-context discipline, multimodal input discipline) become inert and the always-on core continues to apply.
 
 > When working in a model that is **not** M3, do not promise multimodal or 1M-context behavior. The model-selection guidance in `model-compatibility.mdc` is the source of truth for which capabilities the active model actually exposes.
 
 ---
 
-## M3 + Cursor 3 Surface
+## M3 + Cursor 3.7 Surface
 
 A quick reference for the new surface — when to use each.
 
@@ -290,7 +290,7 @@ A quick reference for the new surface — when to use each.
 | **`/best-of-n`** | Run the same prompt across 2–4 models in parallel worktrees, then compare. Use for high-stakes architecture, design, or refactor decisions. |
 | **`Await`** | Wait for a background shell, subagent, or a specific output token (`Ready`, `Error`). Use for long-running dev servers, parallel subagents, slow CLIs. |
 | **MCP Apps structured content** | When an MCP tool returns structured content, prefer the structured form over prose dumping. |
-| **Composer 2** | Cursor's own model — fast, cheap iteration, ~61.7 Terminal-Bench 2.0 at $0.50/$2.50 per MTok. |
+| **Composer 2.5** | Cursor's own model — fast, cheap iteration; primary slug `composer-2.5`. |
 
 > Tool names and command names can drift across Cursor builds. The decision still stands (use an isolated worktree for risky work; await long-running jobs; prefer structured MCP outputs); if a specific identifier is not exposed in your build, fall back to the next best exposed path.
 
@@ -302,7 +302,7 @@ Three areas separate M3 from a generic coding model — and the optional rules /
 
 - **1M-token MSA + long-context discipline** — explicit retention, compression, and skill-handoff rules, plus a dedicated `minimax-m3-long-context` skill.
 - **Native multimodal input + `multimodal-grounded` verification** — image and video inputs ground visual claims; a dedicated `minimax-m3-multimodal-input` skill teaches the workflow.
-- **Agent Teams on Cursor 3** — explicit roles, bounded handoffs (with environment + model fields), `/best-of-n` as a first-class team pattern, and `Await` for long-running branches.
+- **Agent Teams on Cursor 3.7** — explicit roles, bounded handoffs (with environment + model fields), `/best-of-n` as a first-class team pattern, and `Await` for long-running branches.
 
 ---
 
@@ -315,7 +315,7 @@ The rules are designed to survive model changes:
 - tool advice is written around whatever the environment actually exposes
 - version-sensitive claims are verified at runtime, not frozen into the rules
 
-The always-on core does not depend on a specific model — it teaches tool-first, read-before-edit, scope-controlled behavior that holds across M3, Composer 2, GPT, Claude, and other strong coding models. The M3-specific sections (long-context discipline, multimodal input discipline) are inert on models that do not expose those capabilities; the agent must not promise them.
+The always-on core does not depend on a specific model — it teaches tool-first, read-before-edit, scope-controlled behavior that holds across M3, Composer 2.5, GPT, Claude, and other strong coding models. The M3-specific sections (long-context discipline, multimodal input discipline) are inert on models that do not expose those capabilities; the agent must not promise them.
 
 ---
 
@@ -372,7 +372,7 @@ Never hand-write `.xcodeproj`, `project.pbxproj`, `.xcworkspace`, or complex `.s
 
 Want concrete M3-native patterns instead of only rules? Start here:
 
-- [`examples/agent-teams-product-prototype.md`](examples/agent-teams-product-prototype.md) — a bounded planner / explorer / builder / verifier workflow with M3 + Cursor 3 handoff fields (environment, model) and `/best-of-n` + `Await` notes
+- [`examples/agent-teams-product-prototype.md`](examples/agent-teams-product-prototype.md) — a bounded planner / explorer / builder / verifier workflow with M3 + Cursor 3.7 handoff fields (environment, model) and `/best-of-n` + `Await` notes
 - [`.cursor/skills/incident-triage-harness/SKILL.md`](.cursor/skills/incident-triage-harness/SKILL.md) — a large-skill example for incident-style debugging and mitigation, now with M3 visual-evidence handling
 - [`.cursor/skills/incident-triage-harness/reference.md`](.cursor/skills/incident-triage-harness/reference.md) — companion reference showing progressive disclosure
 - [`.cursor/skills/minimax-m3-long-context/SKILL.md`](.cursor/skills/minimax-m3-long-context/SKILL.md) — the 1M-context discipline skill
@@ -410,8 +410,9 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md) for contribution rules, the skill front
 </details>
 
 <details>
-<summary><b>Cursor 3 & others</b></summary>
+<summary><b>Cursor 3.7 & others</b></summary>
 
+- [Cursor 3.7 changelog](https://cursor.com/changelog)
 - [Cursor 3 announcement](https://cursor.com/blog/cursor-3)
 - [Cursor 3.0 changelog](https://cursor.com/changelog/3-0)
 - [Agents Window docs](https://cursor.com/docs/agent/agents-window)
