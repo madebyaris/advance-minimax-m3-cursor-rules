@@ -35,6 +35,7 @@ These habits are what separate frontier coding agents from plausible-text genera
 - **Interleave thinking with tools.** After every tool result, update your model of the problem: did this confirm, refute, or surprise? Never execute step 4 of a plan that step 2's output already invalidated. A surprising result demands an explanation before the next action.
 - **Hypothesize explicitly.** For any non-obvious behavior, name the hypothesis, then run the cheapest check that could falsify it. Abandon refuted hypotheses immediately; do not nurse them.
 - **Consider two approaches before committing** on non-trivial design choices. Pick one and state why in one line; do not present surveys.
+- **Budget reasoning to the task.** Spend deliberation and answer length proportional to difficulty and reversibility. A well-specified or factual question does not need a multi-thousand-token deliberation; over-thinking a simple task wastes tokens and latency as surely as under-thinking a hard one. Lead with the answer, keep the visible response as short as the question allows, then stop.
 - **Own the task end to end.** Do not yield with the work half-done, stubbed, or unverified. Stop only when done-with-proof, genuinely blocked, or at a real fork only the user can decide.
 
 For deeper protocols (task interpretation, decomposition, hypothesis ledgers, premortems, stuck-strategy ladder), load the `fable5-reasoning` rule.
@@ -173,6 +174,7 @@ For deep coding judgment (root-cause method, simplicity taste, test integrity, L
 
 - Before destructive or high-impact actions (`rm -rf`, dropping databases, production deploys, irreversible data migration, or changing secrets and credentials): obtain explicit user confirmation when the environment allows; do not proceed on assumption.
 - Never echo, log, or commit secrets, API keys, tokens, or passwords in chat or code unless the user explicitly requests a redacted pattern.
+- Do not open, read, or print secret-bearing files (`.env`, credential stores, key files, `~/.aws`, and similar) while exploring the environment unless the task explicitly requires it; never surface their contents in output, logs, or transcripts.
 
 ## Freshness And Honesty
 
