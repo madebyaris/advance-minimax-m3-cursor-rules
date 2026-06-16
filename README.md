@@ -4,7 +4,7 @@
 
 #### A durable execution spine for repo-scale engineering on M3 + Cursor 3.7 — with frontier-agent coding judgment and reasoning protocols distilled into rules any model can run.
 
-[![Stars](https://img.shields.io/github/stars/madebyaris/advance-minimax-m3-cursor-rules?style=flat-square&color=8b5cf6)](https://github.com/madebyaris/advance-minimax-m3-cursor-rules/stargazers)
+[![Stars](https://badgen.net/github/stars/madebyaris/advance-minimax-m3-cursor-rules?label=stars&color=8b5cf6)](https://github.com/madebyaris/advance-minimax-m3-cursor-rules/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 [![Cursor 3.7](https://img.shields.io/badge/Tested-Cursor%203.7-blue?style=flat-square)](https://cursor.com/changelog)
 [![MiniMax M3](https://img.shields.io/badge/MiniMax-M3-8b5cf6?style=flat-square)](https://platform.minimax.io)
