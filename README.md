@@ -53,7 +53,7 @@
 
 ## Quick Start
 
-> **Not a developer?** You can still use these rules. Read the plain-language [**Non-Developer Guide**](docs/FOR-NON-DEVELOPERS.md) — what the rules do for you, how to install them with no terminal, and how to ask for what you want in everyday words.
+> **Not a developer?** You can still use these rules. Read the plain-language Non-Developer Guide — what the rules do for you, how to install them with no terminal, and how to write good prompts in everyday words. Available in [**English**](docs/FOR-NON-DEVELOPERS.md) and [**Bahasa Indonesia**](docs/FOR-NON-DEVELOPERS.id.md).
 
 ### For Cursor
 

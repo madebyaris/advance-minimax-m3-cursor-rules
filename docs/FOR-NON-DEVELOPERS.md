@@ -1,5 +1,7 @@
 # Using these rules if you are not a programmer
 
+**Language:** English · [Bahasa Indonesia](FOR-NON-DEVELOPERS.id.md)
+
 You do **not** need to know how to code to get a lot out of this. These rules are a set
 of instructions that make Cursor's AI behave more like a careful, senior engineer and
 less like an over-confident intern. This page explains, in plain language, what they do
@@ -73,6 +75,44 @@ controller." If you knew those words you probably would not need this page.
 
 You can also **paste a screenshot** of something that looks wrong. The assistant can read
 images, so a picture of the broken page is often the fastest way to explain a problem.
+
+---
+
+## How to write a good prompt (the simple formula)
+
+You don't need jargon. A reliable request answers three small questions:
+
+1. **What do you want?** — the outcome, in plain words.
+2. **Where is it / what does it affect?** — the page, screen, or feature (if you know it).
+3. **What does "good" look like?** — how you'll know it worked.
+
+Think of it as **Goal + Where + Done-looks-like.** You rarely need all three, but the more
+you give, the better the result.
+
+See the difference:
+
+| Weak prompt | Strong prompt |
+|---|---|
+| "fix the form" | "On the contact form, people can send it without an email address. It should require a valid email before sending." |
+| "make it look better" | "The pricing page feels cramped on a phone. Add more space between the cards so they're easy to read on mobile." |
+| "it's broken" | "When I click **Add to cart**, nothing happens and the cart stays empty. It should add the item and show the count go up." |
+| "make a booking thing" | "I want clients to book a 30-minute call with me. Start with the simplest option — I don't have a website yet." |
+
+A few habits that make prompts work better:
+
+- **Describe what you see, not the cause.** "The total shows 12, it should be 12.50" is
+  perfect — you don't need to guess *why*.
+- **One goal per message.** Get one thing working, then say "now do the same for the
+  signup page."
+- **Attach a screenshot** for anything visual. A picture is faster than a paragraph.
+- **Nervous? Ask it to explain first:** *"Before changing anything, tell me what you plan
+  to do."* You can approve, then say "go ahead."
+- **Handy follow-ups:** *"How did you verify this works?"*, *"Show me what you changed"*,
+  *"Undo that"*, *"Explain it to me like I'm not a developer."*
+
+> **Copy-paste starter:**
+> *"I want to [your goal]. It's on [the page/feature]. Right now [what happens]; instead it
+> should [what you want]. Please make the change and tell me how you checked it works."*
 
 ---
 
