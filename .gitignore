@@ -1,1 +1,11 @@
 /test-app
+harness/.env
+harness/.venv/
+harness/workspace*/
+harness/run-*/
+harness/*-run/
+harness/*.log
+harness/*-transcript.json
+__pycache__/
+*.pyc
+.build/
