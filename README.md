@@ -24,7 +24,7 @@
 
 <sub>
 
-[Quick Start](#-quick-start) · [Why This Repo](#-why-this-repo-exists) · [Architecture](#-rule-architecture) · [Runtime Modes](#-m3-runtime-modes) · [Solver Loop](#-the-solver-loop) · [AGENTS.md](#-agentsmd-for-other-ides-and-clis) · [References](#-references)
+[Quick Start](#-quick-start) · [Non-Dev Guide](docs/FOR-NON-DEVELOPERS.md) · [Why This Repo](#-why-this-repo-exists) · [Architecture](#-rule-architecture) · [Runtime Modes](#-m3-runtime-modes) · [Solver Loop](#-the-solver-loop) · [Evaluate It](#-evaluate-it-yourself) · [References](#-references)
 
 </sub>
 
@@ -52,6 +52,8 @@
 ---
 
 ## Quick Start
+
+> **Not a developer?** You can still use these rules. Read the plain-language [**Non-Developer Guide**](docs/FOR-NON-DEVELOPERS.md) — what the rules do for you, how to install them with no terminal, and how to ask for what you want in everyday words.
 
 ### For Cursor
 
@@ -97,9 +99,14 @@ Copy `docs/AGENTS.md` into the target repo root as `AGENTS.md`. It lives under `
     ├── minimax-m3-long-context/             # new · 1M-context retention/compression
     └── minimax-m3-multimodal-input/         # new · native image/video input workflow
 docs/
-└── AGENTS.md                      # portable agent contract (non-Cursor)
+├── AGENTS.md                      # portable agent contract (non-Cursor)
+└── FOR-NON-DEVELOPERS.md          # plain-language guide for non-programmers
 examples/
 └── agent-teams-product-prototype.md
+harness/                           # evaluation harness — run the rules against a real model
+├── agent.py                                 minimal tool-using agent loop (rules as system prompt)
+├── quiz.py · intent_test.py                 no-tool knowledge + intent probes
+└── seeds/                                   visible+hidden tasks (calc, roman, tally)
 ```
 
 ---
@@ -387,6 +394,21 @@ Want concrete M3-native patterns instead of only rules? Start here:
 It focuses on action-first execution, the reasoning protocol (intent-first, interleaved thinking, explicit hypotheses, end-to-end ownership), solver-loop thinking, scope control, read-before-edit discipline, root-cause-first code discipline with test integrity, proportional verification (including red → green for bug fixes), explicit status labels (including `multimodal-grounded`), M3 long-context discipline, M3 multimodal input discipline, current-source version discipline, CLI-first scaffolding, and concise communication.
 
 > **To use it elsewhere:** copy `docs/AGENTS.md` into the target repo root as `AGENTS.md`. If you run both `AGENTS.md` and `.cursor/rules`, keep them aligned rather than letting them drift into contradictory layers.
+
+---
+
+## Evaluate It Yourself
+
+The claims here are meant to be reproducible, not taken on faith. [`harness/`](harness/README.md) is a small tool-using agent loop that runs **MiniMax M3** (or any OpenAI-compatible model) against real tasks **with these rules loaded as its system prompt** — so you can watch the inspect → act → verify loop, A/B with `--no-rules`, and read the transcript.
+
+```bash
+cd harness
+python3 -m venv .venv && ./.venv/bin/pip install -r requirements.txt
+cp .env.example .env            # set MINIMAX_API_KEY
+./.venv/bin/python agent.py "fix the failing test in calc.py" --workdir ./workspace
+```
+
+It also ships no-tool probes — `quiz.py` (knowledge) and `intent_test.py` (reading intent from vague prompts) — plus `seeds/` tasks that pair a visible spec with a hidden grader, so a pass means the model generalized rather than overfit. See [`harness/README.md`](harness/README.md).
 
 ---
 
